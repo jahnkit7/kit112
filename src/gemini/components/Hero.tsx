@@ -1911,12 +1911,20 @@ export const Hero = () => {
               animate={{ y: 0, opacity: 1 }}
               exit={{ opacity: 0, y: -35 }}
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              className="flex flex-col items-center text-center px-4"
+              className="flex flex-col items-center text-center px-6"
             >
-              <h1 className="text-xl sm:text-2xl font-light tracking-[0.25em] text-neutral-300 font-sans uppercase mb-8">
-                SCROLL DOWN TO REVEAL
+              <img
+                src={mjkLogo}
+                alt="Marie Janvier Kitcho"
+                className="h-28 sm:h-36 w-auto mb-10 drop-shadow-[0_0_30px_rgba(255,255,255,0.08)]"
+              />
+              <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-neutral-100 mb-4 leading-tight">
+                Bienvenue dans mon univers
               </h1>
-              <div className="w-[1px] h-32 bg-gradient-to-b from-neutral-400 via-neutral-400/40 to-transparent mx-auto" />
+              <p className="text-sm sm:text-base font-light text-neutral-400 max-w-xs leading-relaxed mb-8">
+                Faites défiler — chaque geste révèle un fragment de ma vision.
+              </p>
+              <div className="w-[1px] h-24 bg-gradient-to-b from-neutral-400 via-neutral-400/40 to-transparent mx-auto" />
             </motion.div>
           </motion.div>
         )}
