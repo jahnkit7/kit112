@@ -1385,6 +1385,7 @@ export const Hero = () => {
           >
           <motion.div
             ref={streamInnerRef}
+            data-mobile-stream-inner
             variants={containerVariants}
             initial="hidden"
             animate="visible"
@@ -1961,7 +1962,7 @@ export const Hero = () => {
                 setActiveSection("expertise");
               }}
               transition={{ duration: 0.8 }}
-              className="border-t border-white/5 pt-16 space-y-10"
+              className="border-t border-white/5 pt-16 space-y-8 lg:space-y-10"
             >
               <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
                 <div className="space-y-4">
@@ -1996,7 +1997,7 @@ export const Hero = () => {
               </div>
 
               {/* Stacked cards reveal (scroll-driven) — dark DA */}
-              <ContainerScroll className="!min-h-[180vh]">
+              <ContainerScroll className="!min-h-[300vh] lg:!min-h-[220vh]">
                 <CardsContainer>
                   {testimonialsData.map((t, idx) => (
                     <CardTransformed
@@ -2004,23 +2005,25 @@ export const Hero = () => {
                       variant="dark"
                       arrayLength={testimonialsData.length}
                       index={idx}
-                      className="!justify-between !p-8 md:!p-10 !rounded-[2rem] !bg-zinc-950/90 !border-white/10 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.7)]"
+                      incrementY={6}
+                      incrementZ={8}
+                      className="!justify-between !gap-4 !p-5 sm:!p-6 md:!p-8 lg:!p-10 !rounded-[1.5rem] lg:!rounded-[2rem] !bg-zinc-950/90 !border-white/10 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.7)]"
                     >
-                      <div className="w-full space-y-6">
+                      <div className="w-full space-y-4 lg:space-y-6">
                         <div className="flex items-center justify-between">
                           <span className="text-[9px] font-mono tracking-widest text-emerald-400/80 uppercase font-bold">
                             {t.logo}
                           </span>
-                          <span className="font-serif text-white/10 text-6xl leading-none select-none">
+                          <span className="font-serif text-white/10 text-5xl lg:text-6xl leading-none select-none">
                             “
                           </span>
                         </div>
-                        <p className="text-white text-base md:text-xl font-light leading-relaxed italic">
+                        <p className="text-white text-[17px] sm:text-lg md:text-xl font-light leading-relaxed italic">
                           “{t.quote}”
                         </p>
                       </div>
-                      <div className="w-full flex items-center gap-4 pt-6 border-t border-white/5">
-                        <div className="w-11 h-11 rounded-full overflow-hidden border border-white/10 shrink-0">
+                      <div className="w-full flex items-center gap-3 lg:gap-4 pt-4 lg:pt-6 border-t border-white/5">
+                        <div className="w-9 h-9 lg:w-11 lg:h-11 rounded-full overflow-hidden border border-white/10 shrink-0">
                           <img
                             src={t.avatar}
                             alt={t.author}
