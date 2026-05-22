@@ -178,7 +178,7 @@ export const CardTransformed = React.forwardRef<HTMLDivElement, CardStickyProps>
       rotateRange as [number, number],
       [rot, 0],
     );
-    const transform = useMotionTemplate`translateZ(${index * incrementZ}px) translateY(${y}) rotate(${rotate}deg)`;
+    const transform = useMotionTemplate`translateZ(${(arrayLength - index) * incrementZ}px) translateY(${y}) rotate(${rotate}deg)`;
 
     const cardStyle = {
       top: index * incrementY,
