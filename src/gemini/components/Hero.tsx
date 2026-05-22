@@ -1113,13 +1113,14 @@ export const Hero = () => {
               {/* Location & Time Row */}
               <motion.div
                 variants={itemVariants}
-                className="flex justify-between items-start border-b border-white/5 pb-8"
+                className="flex flex-col items-center gap-3 lg:flex-row lg:items-start lg:justify-between border-b border-white/5 pb-8"
               >
                 <div className="flex items-center gap-3">
                   <a href="#" className="block">
-                    <img src={mjkLogo} alt="Marie Janvier Kitcho" className="h-9 w-auto" />
+                    <img src={mjkLogo} alt="Marie Janvier Kitcho" className="h-14 lg:h-20 w-auto" />
                   </a>
                 </div>
+
 
                 <div className="text-right hidden sm:block">
                   <div className="text-white/30 text-[9px] font-black uppercase tracking-wider mb-0.5">
