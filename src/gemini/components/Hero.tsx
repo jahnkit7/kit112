@@ -2192,11 +2192,11 @@ export const Hero = () => {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.04, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                  onClick={() => setSelectedImage(p.image)}
+                  onClick={() => setSelectedImage(PLACEHOLDER_IMG)}
                   className="relative aspect-square overflow-hidden group bg-zinc-900"
                 >
                   <img
-                    src={p.image}
+                    src={PLACEHOLDER_IMG}
                     alt={p.title || `Projet ${i + 1}`}
                     loading="lazy"
                     className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 group-active:scale-95"
