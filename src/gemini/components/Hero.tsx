@@ -490,6 +490,8 @@ export const Hero = () => {
     "/assets/images/hero_portrait.jpg",
   );
   const [activeSection, setActiveSection] = useState("home");
+  const [activeDockAction, setActiveDockAction] = useState<string | null>(null);
+  const [galleryOpen, setGalleryOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
