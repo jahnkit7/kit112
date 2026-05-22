@@ -55,12 +55,12 @@ export function VerticalImageStack({ images, className = "" }: VerticalImageStac
     if (diff > total / 2) diff -= total;
     if (diff < -total / 2) diff += total;
 
-    if (diff === 0) return { y: 0, scale: 1, opacity: 1, zIndex: 5, rotateX: 0 };
-    if (diff === -1) return { y: -140, scale: 0.84, opacity: 0.55, zIndex: 4, rotateX: 10 };
-    if (diff === -2) return { y: -240, scale: 0.7, opacity: 0.25, zIndex: 3, rotateX: 18 };
-    if (diff === 1) return { y: 140, scale: 0.84, opacity: 0.55, zIndex: 4, rotateX: -10 };
-    if (diff === 2) return { y: 240, scale: 0.7, opacity: 0.25, zIndex: 3, rotateX: -18 };
-    return { y: diff > 0 ? 360 : -360, scale: 0.6, opacity: 0, zIndex: 0, rotateX: diff > 0 ? -22 : 22 };
+    if (diff === 0) return { y: 0, z: 0, scale: 1, opacity: 1, zIndex: 50, rotateX: 0 };
+    if (diff === -1) return { y: -140, z: -120, scale: 0.84, opacity: 0.55, zIndex: 40, rotateX: 10 };
+    if (diff === -2) return { y: -240, z: -240, scale: 0.7, opacity: 0.25, zIndex: 30, rotateX: 18 };
+    if (diff === 1) return { y: 140, z: -120, scale: 0.84, opacity: 0.55, zIndex: 40, rotateX: -10 };
+    if (diff === 2) return { y: 240, z: -240, scale: 0.7, opacity: 0.25, zIndex: 30, rotateX: -18 };
+    return { y: diff > 0 ? 360 : -360, z: -360, scale: 0.6, opacity: 0, zIndex: 0, rotateX: diff > 0 ? -22 : 22 };
   };
 
   const isVisible = (index: number) => {
