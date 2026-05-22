@@ -650,12 +650,8 @@ export const Hero = () => {
         <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/85 to-[#0a0a0a]/35" />
       </div>
 
-      {/* Mobile/Tablet Top Logo Header — visible by default, hides on scroll */}
-      <div className={`fixed top-0 inset-x-0 z-[60] lg:hidden pointer-events-none flex justify-center pt-5 transition-all duration-500 ${
-        isMobile && isScrolled ? "opacity-0 -translate-y-6" : "opacity-100 translate-y-0"
-      }`}>
-        <img src={mjkLogo} alt="MJK" className="h-7 w-auto" />
-      </div>
+      {/* Mobile/Tablet top logo removed — logo now displayed inline above the headline */}
+
 
       {/* Mobile phone screen chrome: masks are clipped to the inner screen rectangle only */}
       {isMobile && (
