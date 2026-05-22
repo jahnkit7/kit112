@@ -447,6 +447,24 @@ const testimonialsData = [
     avatar: "/assets/images/hero_portrait.jpg",
     logo: "PRODUCT LAB",
   },
+  {
+    id: 4,
+    quote:
+      "Sa méthode nous a donné une direction lisible, des priorités nettes et une exécution beaucoup plus fluide dès les premières semaines.",
+    author: "Aïcha N.",
+    role: "Fondatrice Retail",
+    avatar: "/assets/images/portfolio_1_1779296273783.png",
+    logo: "BRAND OPS",
+  },
+  {
+    id: 5,
+    quote:
+      "Marie a transformé une idée dispersée en expérience cohérente, désirable et prête à être lancée sans perdre notre exigence business.",
+    author: "Karim S.",
+    role: "CEO Studio Digital",
+    avatar: "/assets/images/portfolio_2_1779296292371.png",
+    logo: "LAUNCH STUDIO",
+  },
 ];
 
 const visionCards = [
