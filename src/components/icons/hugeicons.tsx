@@ -48,6 +48,9 @@ import {
   Loading03Icon,
   CheckmarkCircle01Icon,
   CreditCardIcon,
+  CallFreeIcons,
+  WhatsappFreeIcons,
+  Album02FreeIcons,
 } from "@hugeicons/core-free-icons";
 import type { ComponentProps, ComponentType } from "react";
 
@@ -125,3 +128,6 @@ export const Circle = make(CircleIcon);
 export const Loader2 = make(Loading03Icon);
 export const CheckCircle2 = make(CheckmarkCircle01Icon);
 export const CreditCard = make(CreditCardIcon);
+export const Phone = make(CallFreeIcons);
+export const Whatsapp = make(WhatsappFreeIcons);
+export const GalleryAlbum = make(Album02FreeIcons);
