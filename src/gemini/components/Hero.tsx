@@ -607,6 +607,20 @@ export const Hero = () => {
   const mobilePhoneDetailsOpacity = useTransform(scrollY, [0, 45, 260, 420], [0, 1, 1, 0]);
   const mobilePhoneDetailsY = useTransform(scrollY, [260, 420], [0, 18]);
 
+  // Mobile: clip stream content to phone screen rect via fixed wrapper + translate
+  const streamInnerRef = useRef<HTMLDivElement>(null);
+  const [streamHeight, setStreamHeight] = useState(0);
+  useEffect(() => {
+    if (!isMobile || !streamInnerRef.current) return;
+    const el = streamInnerRef.current;
+    const update = () => setStreamHeight(el.offsetHeight);
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [isMobile]);
+  const mobileStreamTranslateY = useTransform(scrollY, (v) => -v);
+
 
   return (
     <section ref={containerRef} className="relative bg-[#0a0a0a] min-h-screen [overflow-x:clip]">
@@ -649,10 +663,7 @@ export const Hero = () => {
           aria-hidden="true"
         >
           <div className="absolute inset-0 rounded-[40px] overflow-hidden">
-            <div className="pointer-events-none absolute top-0 inset-x-0 h-[15%] z-10 bg-gradient-to-b from-[#0a0a0a] via-[#0a0a0a]/85 to-transparent" />
-            <div className="pointer-events-none absolute bottom-0 inset-x-0 h-[24%] z-10 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/92 to-transparent" />
-            <div className="pointer-events-none absolute inset-y-0 left-0 w-8 z-10 bg-gradient-to-r from-[#0a0a0a]/95 via-[#0a0a0a]/55 to-transparent" />
-            <div className="pointer-events-none absolute inset-y-0 right-0 w-8 z-10 bg-gradient-to-l from-[#0a0a0a]/95 via-[#0a0a0a]/55 to-transparent" />
+
 
             <div className="absolute bottom-3 inset-x-3 z-20 bg-zinc-950/75 backdrop-blur-xl border border-white/10 rounded-[28px] p-2.5 flex items-center justify-around shadow-[0_20px_50px_rgba(0,0,0,0.85)] pointer-events-auto">
               {dockItems.map((item) => {
@@ -1068,13 +1079,27 @@ export const Hero = () => {
             </motion.div>
           </div>
 
+          {/* Mobile: spacer to preserve document scroll height */}
+          {isMobile && <div aria-hidden style={{ height: streamHeight }} />}
+
           {/* Right Column: Scrollable Content Stream */}
+          <div
+            className={
+              isMobile
+                ? "fixed inset-x-0 top-[4vh] z-[45] mx-auto h-[92vh] max-h-[900px] w-[92vw] max-w-[460px] overflow-hidden rounded-[40px] pointer-events-none lg:static lg:h-auto lg:max-h-none lg:w-auto lg:max-w-none lg:overflow-visible lg:rounded-none"
+                : "contents"
+            }
+          >
           <motion.div
+            ref={streamInnerRef}
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            style={{ opacity: isMobile ? mobileStreamOpacity : 1, y: isMobile ? mobileStreamY : 0 }}
-            className={`flex flex-col gap-24 lg:gap-32 py-4 lg:py-6 relative z-40 w-full max-w-[500px] lg:max-w-none min-w-0 mx-auto px-5 sm:px-8 lg:pl-0 lg:pr-4 pt-[106vh] pb-32 lg:pt-2 transition-all duration-500 ${
+            style={{
+              opacity: isMobile ? mobileStreamOpacity : 1,
+              y: isMobile ? mobileStreamTranslateY : 0,
+            }}
+            className={`flex flex-col gap-24 lg:gap-32 py-4 lg:py-6 relative z-40 w-full max-w-[500px] lg:max-w-none min-w-0 mx-auto px-8 sm:px-10 lg:pl-0 lg:pr-4 pt-[106vh] pb-32 lg:pt-2 transition-opacity duration-500 ${
               isMobile && !isScrolled ? "pointer-events-none" : "pointer-events-auto"
             }`}
           >
@@ -1887,6 +1912,8 @@ export const Hero = () => {
               </div>
             </motion.div>
           </motion.div>
+          </div>
+
         </div>
       </div>
 
