@@ -687,6 +687,209 @@ export const Hero = () => {
   const mobileStreamTranslateY = useTransform(scrollY, (v) => -v);
 
 
+  // Shared dock + immersive action screens (phone/message/whatsapp) used inside
+  // both the mobile phone chrome and the desktop phone container.
+  const dockOverlay = (
+    <>
+      {/* Immersive Action Screens (Phone / Message / WhatsApp) */}
+      <AnimatePresence>
+        {dockScreen && (
+          <motion.div
+            key={dockScreen}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 30 }}
+            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            className="absolute inset-0 z-[60] pointer-events-auto overflow-hidden"
+          >
+            {dockScreen === "phone" && (
+              <div className="relative w-full h-full bg-gradient-to-b from-[#0b1f1a] via-[#0a0a0a] to-[#000] flex flex-col">
+                <div className="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_50%_20%,#10b981_0%,transparent_60%)]" />
+                <button
+                  onClick={() => { setDockScreen(null); setActiveDockAction(null); }}
+                  className="absolute top-12 left-4 z-10 text-white/70 text-xs flex items-center gap-1 hover:text-white"
+                  aria-label="Retour"
+                >
+                  <ChevronLeft size={16} /> Retour
+                </button>
+                <div className="relative z-10 flex-1 flex flex-col items-center justify-center pt-20 px-6">
+                  <div className="text-[10px] uppercase tracking-[0.3em] text-emerald-400/80 mb-3">Appel sortant</div>
+                  <div className="w-24 h-24 rounded-full bg-gradient-to-br from-emerald-500/40 to-emerald-900/40 border border-emerald-400/30 flex items-center justify-center mb-5 shadow-[0_0_40px_rgba(16,185,129,0.35)]">
+                    <span className="text-3xl font-bold text-white">MJ</span>
+                  </div>
+                  <h2 className="text-xl font-bold text-white mb-1">Marie Janvier</h2>
+                  <p className="text-emerald-300/90 text-sm font-mono tracking-wider">+221 78 122 16 70</p>
+                  <p className="text-zinc-500 text-[10px] mt-2 uppercase tracking-widest">Senegal · mobile</p>
+                </div>
+                <div className="relative z-10 pb-10 px-6 flex flex-col items-center gap-3">
+                  <motion.a
+                    href="tel:+221781221670"
+                    whileTap={{ scale: 0.92 }}
+                    className="w-16 h-16 rounded-full bg-[#ff3b30] flex items-center justify-center shadow-[0_8px_30px_rgba(255,59,48,0.6)] ring-4 ring-[#ff3b30]/20"
+                    aria-label="Lancer l'appel"
+                  >
+                    <Phone size={26} className="text-white" />
+                  </motion.a>
+                  <span className="text-[11px] text-white/70 mt-1">Appuyez pour appeler</span>
+                </div>
+              </div>
+            )}
+
+            {dockScreen === "message" && (
+              <div className="relative w-full h-full bg-[#000] flex flex-col">
+                <div className="flex items-center gap-3 px-3 pt-12 pb-3 border-b border-white/5 bg-[#0a0a0a]/95 backdrop-blur-xl">
+                  <button
+                    onClick={() => { setDockScreen(null); setActiveDockAction(null); }}
+                    className="text-[#0a84ff]"
+                    aria-label="Retour"
+                  >
+                    <ChevronLeft size={22} />
+                  </button>
+                  <div className="flex-1 flex flex-col items-center -ml-6">
+                    <div className="w-9 h-9 rounded-full bg-gradient-to-br from-emerald-500/60 to-emerald-900/60 flex items-center justify-center text-white text-[11px] font-bold">MJ</div>
+                    <span className="text-[10px] text-white/70 mt-0.5">Marie Janvier</span>
+                  </div>
+                </div>
+                <div className="flex-1 overflow-y-auto px-3 py-4 space-y-2">
+                  {messages.map((m, i) => (
+                    <div key={i} className={`flex ${m.from === "me" ? "justify-end" : "justify-start"}`}>
+                      <div
+                        className={`max-w-[75%] px-3 py-2 rounded-[18px] text-[13px] leading-snug ${
+                          m.from === "me"
+                            ? "bg-[#0a84ff] text-white rounded-br-[5px]"
+                            : "bg-[#1c1c1e] text-white rounded-bl-[5px]"
+                        }`}
+                      >
+                        {m.text}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="px-2 pt-2 pb-4 bg-[#0a0a0a]/95 border-t border-white/5">
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      className="w-8 h-8 rounded-full bg-[#1c1c1e] flex items-center justify-center text-white/70 hover:text-white shrink-0"
+                      aria-label="Joindre une image"
+                      onClick={() => setMessages((m) => [...m, { from: "me", text: "📷 Image jointe" }])}
+                    >
+                      <GalleryAlbum size={15} />
+                    </button>
+                    <button
+                      className="w-8 h-8 rounded-full bg-[#1c1c1e] flex items-center justify-center text-white/70 hover:text-white shrink-0"
+                      aria-label="Joindre un fichier"
+                      onClick={() => setMessages((m) => [...m, { from: "me", text: "📎 Fichier joint" }])}
+                    >
+                      <FileText size={14} />
+                    </button>
+                    <div className="flex-1 flex items-center bg-[#1c1c1e] rounded-full pl-3 pr-1 py-1">
+                      <input
+                        value={messageInput}
+                        onChange={(e) => setMessageInput(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" && messageInput.trim()) {
+                            setMessages((m) => [...m, { from: "me", text: messageInput.trim() }]);
+                            setMessageInput("");
+                          }
+                        }}
+                        placeholder="iMessage"
+                        className="flex-1 bg-transparent text-[12px] text-white placeholder-white/40 outline-none"
+                      />
+                      <button
+                        onClick={() => {
+                          if (!messageInput.trim()) return;
+                          setMessages((m) => [...m, { from: "me", text: messageInput.trim() }]);
+                          setMessageInput("");
+                        }}
+                        className="w-7 h-7 rounded-full bg-[#0a84ff] flex items-center justify-center text-white shrink-0"
+                        aria-label="Envoyer"
+                      >
+                        <ArrowRight size={13} />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {dockScreen === "whatsapp" && (
+              <div className="relative w-full h-full bg-gradient-to-b from-[#0a1f17] via-[#0a0a0a] to-[#000] flex flex-col">
+                <button
+                  onClick={() => { setDockScreen(null); setActiveDockAction(null); }}
+                  className="absolute top-12 left-4 z-10 text-white/70 text-xs flex items-center gap-1 hover:text-white"
+                  aria-label="Retour"
+                >
+                  <ChevronLeft size={16} /> Retour
+                </button>
+                <div className="flex-1 flex flex-col items-center justify-center px-6 text-center">
+                  <div className="w-20 h-20 rounded-full bg-[#25D366] flex items-center justify-center mb-5 shadow-[0_0_40px_rgba(37,211,102,0.45)]">
+                    <Whatsapp size={36} className="text-white" />
+                  </div>
+                  <h2 className="text-xl font-bold text-white mb-1">WhatsApp</h2>
+                  <p className="text-zinc-400 text-[12px] mb-1">Discutons sur WhatsApp</p>
+                  <p className="text-emerald-300/90 text-[11px] font-mono">+221 78 122 16 70</p>
+                </div>
+                <div className="pb-10 px-6 flex flex-col items-center gap-2">
+                  <motion.a
+                    href="https://wa.me/221781221670"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    whileTap={{ scale: 0.95 }}
+                    className="w-full max-w-[220px] py-3 rounded-full bg-[#25D366] text-white text-sm font-bold flex items-center justify-center gap-2 shadow-[0_8px_30px_rgba(37,211,102,0.45)]"
+                  >
+                    <Whatsapp size={18} /> Ouvrir WhatsApp
+                  </motion.a>
+                  <span className="text-[10px] text-white/40 mt-1">Réponse sous 24h en moyenne</span>
+                </div>
+              </div>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {!dockScreen && (
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 bg-black/95 rounded-full px-4 py-3 flex items-center gap-2 shadow-[0_20px_50px_rgba(0,0,0,0.85)] pointer-events-auto ring-1 ring-white/5">
+          {dockItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = activeDockAction === item.id;
+            const handleClick = () => {
+              setActiveDockAction(item.id);
+              if (window.navigator?.vibrate) window.navigator.vibrate(15);
+              if (item.action === "gallery") {
+                setGalleryOpen(true);
+              } else if (item.id === "phone" || item.id === "message" || item.id === "whatsapp") {
+                setDockScreen(item.id);
+              }
+            };
+            return (
+              <button
+                key={item.id}
+                onClick={handleClick}
+                aria-label={item.label}
+                className="flex flex-col items-center justify-center relative w-12 h-12 rounded-full transition-all duration-300 pointer-events-auto"
+              >
+                <Icon
+                  size={22}
+                  className={`transition-all duration-300 ${
+                    isActive
+                      ? "text-[#10b981] scale-110 drop-shadow-[0_0_8px_rgba(16,185,129,0.55)]"
+                      : "text-zinc-400 hover:text-zinc-200"
+                  }`}
+                />
+                {isActive && (
+                  <motion.div
+                    layoutId="activeDockDot"
+                    className="absolute -bottom-0.5 w-1 h-1 rounded-full bg-[#10b981]"
+                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                  />
+                )}
+              </button>
+            );
+          })}
+        </div>
+      )}
+    </>
+  );
+
   return (
     <section ref={containerRef} className="relative bg-[#0a0a0a] min-h-screen [overflow-x:clip]">
       {/* Background Ambient Glows */}
