@@ -44,7 +44,7 @@ export const ContainerScroll: React.FC<React.HTMLAttributes<HTMLDivElement>> = (
   const scrollRef = React.useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: scrollRef,
-    offset: ["start start", "end end"],
+    offset: ["start center", "end end"],
   });
 
   return (
@@ -78,7 +78,7 @@ export const CardsContainer: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
       {...props}
     >
       <div
-        className="relative h-[44vh] sm:h-[40vh] md:h-[42vh] w-full max-w-xl mx-auto px-4"
+        className="relative h-[58vh] sm:h-[52vh] md:h-[46vh] w-[min(100%,34rem)] mx-auto"
         style={{ transformStyle: "preserve-3d" }}
       >
         {children}
@@ -138,8 +138,7 @@ export const CardTransformed = React.forwardRef<HTMLDivElement, CardStickyProps>
       top: index * incrementY,
       transform,
       backfaceVisibility: "hidden",
-      // Front card = lowest index. Must leave first AND sit on top.
-      zIndex: 100 + (arrayLength - index),
+      zIndex: (arrayLength - index) * incrementZ,
       ...style,
     } as React.CSSProperties;
 
