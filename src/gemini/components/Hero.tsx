@@ -782,50 +782,95 @@ export const Hero = () => {
                 onMouseEnter={() => setIsIslandHovered(true)}
                 onMouseLeave={() => setIsIslandHovered(false)}
                 animate={{
-                  width: isIslandHovered ? 230 : 110,
-                  height: isIslandHovered ? 40 : 20,
-                  borderRadius: isIslandHovered ? "20px" : "9999px",
+                  width: showNotification ? 260 : isIslandHovered ? 250 : 132,
+                  height: showNotification ? 52 : isIslandHovered ? 46 : 26,
+                  borderRadius: showNotification || isIslandHovered ? "26px" : "9999px",
                 }}
-                transition={{ type: "spring", stiffness: 350, damping: 25 }}
-                className="absolute top-2.5 left-1/2 -translate-x-1/2 bg-black z-50 border border-white/10 flex items-center justify-between px-3.5 shadow-xl cursor-default overflow-hidden pointer-events-auto shadow-black/80 ring-1 ring-white/5"
+                transition={{ type: "spring", stiffness: 320, damping: 26 }}
+                className="absolute top-2.5 left-1/2 -translate-x-1/2 bg-black z-50 border border-white/10 flex items-center justify-between px-4 shadow-xl cursor-default overflow-hidden pointer-events-auto shadow-black/80 ring-1 ring-white/5"
               >
-                {!isIslandHovered ? (
-                  <>
-                    <div className="w-1.5 h-1.5 rounded-full bg-zinc-800 border border-white/5 shrink-0 animate-pulse" />
-                    <div className="w-10 h-0.5 bg-zinc-900 rounded-full shrink-0" />
-                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-950 border border-emerald-900/40 flex items-center justify-center shrink-0">
-                      <div className="w-0.5 h-0.5 rounded-full bg-emerald-400" />
-                    </div>
-                  </>
-                ) : (
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.1 }}
-                    className="w-full flex items-center justify-between gap-1.5"
-                  >
-                    {/* Live Wave / Waveform */}
-                    <div className="flex items-center gap-0.5 shrink-0">
-                      <div className="w-0.5 h-3 bg-[#10b981] rounded-full animate-bounce [animation-delay:0.1s]" />
-                      <div className="w-0.5 h-1.5 bg-[#10b981] rounded-full animate-bounce [animation-delay:0.3s]" />
-                      <div className="w-0.5 h-3.5 bg-[#10b981] rounded-full animate-bounce [animation-delay:0.2s]" />
-                    </div>
-
-                    <div className="flex flex-col text-left justify-center min-w-0">
-                      <span className="text-[8px] font-black tracking-widest text-[#10b981] leading-none uppercase">
-                        LIVE EN LIGNE
+                <AnimatePresence mode="wait" initial={false}>
+                  {showNotification ? (
+                    <motion.div
+                      key={`notif-${notificationIndex}`}
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -8 }}
+                      transition={{ duration: 0.28 }}
+                      className="w-full flex items-center gap-2.5"
+                    >
+                      <div
+                        className="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
+                        style={{
+                          background: `${notifications[notificationIndex].tint}22`,
+                          boxShadow: `0 0 14px ${notifications[notificationIndex].tint}55`,
+                        }}
+                      >
+                        {(() => {
+                          const Ic = notifications[notificationIndex].icon;
+                          return <Ic size={14} color={notifications[notificationIndex].tint} />;
+                        })()}
+                      </div>
+                      <div className="flex flex-col min-w-0 flex-1 text-left">
+                        <span
+                          className="text-[8.5px] font-black tracking-widest uppercase leading-none"
+                          style={{ color: notifications[notificationIndex].tint }}
+                        >
+                          {notifications[notificationIndex].title}
+                        </span>
+                        <span className="text-[9.5px] font-medium text-zinc-200 truncate mt-0.5 leading-tight">
+                          {notifications[notificationIndex].body}
+                        </span>
+                      </div>
+                      <span className="text-[7.5px] font-mono text-zinc-500 shrink-0 select-none">
+                        à l'instant
                       </span>
-                      <span className="text-[9px] font-bold text-zinc-100 truncate mt-0.5">
-                        {activeProject ? "Marie January" : "Marie Janvier"}
-                      </span>
-                    </div>
-
-                    <div className="px-1.5 py-0.5 rounded bg-zinc-900 text-zinc-400 border border-white/5 text-[7px] font-black uppercase tracking-wider shrink-0 select-none">
-                      Active
-                    </div>
-                  </motion.div>
-                )}
+                    </motion.div>
+                  ) : isIslandHovered ? (
+                    <motion.div
+                      key="island-live"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="w-full flex items-center justify-between gap-1.5"
+                    >
+                      <div className="flex items-center gap-0.5 shrink-0">
+                        <div className="w-0.5 h-3 bg-[#10b981] rounded-full animate-bounce [animation-delay:0.1s]" />
+                        <div className="w-0.5 h-1.5 bg-[#10b981] rounded-full animate-bounce [animation-delay:0.3s]" />
+                        <div className="w-0.5 h-3.5 bg-[#10b981] rounded-full animate-bounce [animation-delay:0.2s]" />
+                      </div>
+                      <div className="flex flex-col text-left justify-center min-w-0">
+                        <span className="text-[8px] font-black tracking-widest text-[#10b981] leading-none uppercase">
+                          LIVE EN LIGNE
+                        </span>
+                        <span className="text-[9px] font-bold text-zinc-100 truncate mt-0.5">
+                          {activeProject ? "Marie January" : "Marie Janvier"}
+                        </span>
+                      </div>
+                      <div className="px-1.5 py-0.5 rounded bg-zinc-900 text-zinc-400 border border-white/5 text-[7px] font-black uppercase tracking-wider shrink-0 select-none">
+                        Active
+                      </div>
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="island-idle"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="w-full flex items-center justify-between"
+                    >
+                      <div className="w-1.5 h-1.5 rounded-full bg-zinc-800 border border-white/5 shrink-0 animate-pulse" />
+                      <div className="w-12 h-0.5 bg-zinc-900 rounded-full shrink-0" />
+                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-950 border border-emerald-900/40 flex items-center justify-center shrink-0">
+                        <div className="w-0.5 h-0.5 rounded-full bg-emerald-400" />
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </motion.div>
+
 
               {/* 3D Animated Padlock Indicator under Dynamic Island */}
               <div className="absolute top-[38px] left-1/2 -translate-x-1/2 z-50 flex flex-col items-center pointer-events-none">
