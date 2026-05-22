@@ -1907,6 +1907,59 @@ export const Hero = () => {
         onClose={() => setSelectedImage(null)}
       />
 
+      {/* Immersive Gallery Modal — opened from dock */}
+      <AnimatePresence>
+        {galleryOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.35 }}
+            className="fixed inset-0 z-[200] bg-black/95 backdrop-blur-xl overflow-y-auto"
+          >
+            <div className="sticky top-0 z-10 flex items-center justify-between px-5 py-4 bg-gradient-to-b from-black/90 to-transparent">
+              <div>
+                <div className="text-[10px] uppercase tracking-[0.3em] text-emerald-400/80 mb-1">
+                  Galerie immersive
+                </div>
+                <h2 className="text-lg font-bold text-white">Mes réalisations</h2>
+              </div>
+              <button
+                onClick={() => setGalleryOpen(false)}
+                aria-label="Fermer la galerie"
+                className="w-10 h-10 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-white transition-colors"
+              >
+                <X size={18} />
+              </button>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-1 p-1 pb-24">
+              {projects.map((p, i) => (
+                <motion.button
+                  key={p.id ?? i}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.04, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                  onClick={() => setSelectedImage(p.image)}
+                  className="relative aspect-square overflow-hidden group bg-zinc-900"
+                >
+                  <img
+                    src={p.image}
+                    alt={p.title || `Projet ${i + 1}`}
+                    loading="lazy"
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 group-active:scale-95"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 group-active:opacity-100 transition-opacity duration-300" />
+                  <div className="absolute bottom-2 left-2 right-2 text-[10px] font-semibold text-white opacity-0 group-hover:opacity-100 group-active:opacity-100 transition-opacity duration-300 truncate">
+                    {p.title}
+                  </div>
+                </motion.button>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+
       {/* Mobile locked state screen overlay with dynamic animation */}
       <AnimatePresence>
         {isMobile && !isScrolled && (
