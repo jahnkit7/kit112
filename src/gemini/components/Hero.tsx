@@ -40,6 +40,9 @@ import {
   Whatsapp,
   GalleryAlbum,
   X,
+  Sparkles,
+  Activity,
+  CheckCircle2,
 } from "@/components/icons/hugeicons";
 import { Project } from "../types";
 import {
@@ -493,6 +496,8 @@ export const Hero = () => {
   const [activeDockAction, setActiveDockAction] = useState<string | null>(null);
   const [galleryOpen, setGalleryOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [notificationIndex, setNotificationIndex] = useState(0);
+  const [showNotification, setShowNotification] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -560,6 +565,41 @@ export const Hero = () => {
     const timer = setInterval(() => setTime(new Date()), 30000);
     return () => clearInterval(timer);
   }, []);
+
+  // Notifications dynamiques simulées dans la Dynamic Island
+  const notifications = [
+    { icon: Sparkles, title: "Nouveau créneau", body: "Dispo dès lundi · 2 slots", tint: "#10b981" },
+    { icon: Mail, title: "Nouveau brief", body: "Startup fintech · Dakar", tint: "#FF6B35" },
+    { icon: Briefcase, title: "Projet livré", body: "GoteaT · v2 en prod", tint: "#10b981" },
+    { icon: Activity, title: "En écoute", body: "Ouvert aux collaborations", tint: "#A78BFA" },
+    { icon: CheckCircle2, title: "Mission validée", body: "Direction créative · 6 sem", tint: "#10b981" },
+    { icon: Rocket, title: "Lancement", body: "Creative Shop · phase 2", tint: "#FF6B35" },
+  ];
+
+  useEffect(() => {
+    let cancelled = false;
+    let showT: ReturnType<typeof setTimeout>;
+    const cycle = () => {
+      if (cancelled) return;
+      setShowNotification(true);
+      showT = setTimeout(() => {
+        if (cancelled) return;
+        setShowNotification(false);
+        setTimeout(() => {
+          if (cancelled) return;
+          setNotificationIndex((i) => (i + 1) % notifications.length);
+          cycle();
+        }, 1200);
+      }, 3800);
+    };
+    const initial = setTimeout(cycle, 2500);
+    return () => {
+      cancelled = true;
+      clearTimeout(initial);
+      clearTimeout(showT);
+    };
+  }, [notifications.length]);
+
 
   const { data: experiencesSetting } = useSetting("experiences");
   const experienceItems: ExperienceItem[] = experiencesSetting?.items?.length
@@ -742,50 +782,95 @@ export const Hero = () => {
                 onMouseEnter={() => setIsIslandHovered(true)}
                 onMouseLeave={() => setIsIslandHovered(false)}
                 animate={{
-                  width: isIslandHovered ? 230 : 110,
-                  height: isIslandHovered ? 40 : 20,
-                  borderRadius: isIslandHovered ? "20px" : "9999px",
+                  width: showNotification ? 260 : isIslandHovered ? 250 : 132,
+                  height: showNotification ? 52 : isIslandHovered ? 46 : 26,
+                  borderRadius: showNotification || isIslandHovered ? "26px" : "9999px",
                 }}
-                transition={{ type: "spring", stiffness: 350, damping: 25 }}
-                className="absolute top-2.5 left-1/2 -translate-x-1/2 bg-black z-50 border border-white/10 flex items-center justify-between px-3.5 shadow-xl cursor-default overflow-hidden pointer-events-auto shadow-black/80 ring-1 ring-white/5"
+                transition={{ type: "spring", stiffness: 320, damping: 26 }}
+                className="absolute top-2.5 left-1/2 -translate-x-1/2 bg-black z-50 border border-white/10 flex items-center justify-between px-4 shadow-xl cursor-default overflow-hidden pointer-events-auto shadow-black/80 ring-1 ring-white/5"
               >
-                {!isIslandHovered ? (
-                  <>
-                    <div className="w-1.5 h-1.5 rounded-full bg-zinc-800 border border-white/5 shrink-0 animate-pulse" />
-                    <div className="w-10 h-0.5 bg-zinc-900 rounded-full shrink-0" />
-                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-950 border border-emerald-900/40 flex items-center justify-center shrink-0">
-                      <div className="w-0.5 h-0.5 rounded-full bg-emerald-400" />
-                    </div>
-                  </>
-                ) : (
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.1 }}
-                    className="w-full flex items-center justify-between gap-1.5"
-                  >
-                    {/* Live Wave / Waveform */}
-                    <div className="flex items-center gap-0.5 shrink-0">
-                      <div className="w-0.5 h-3 bg-[#10b981] rounded-full animate-bounce [animation-delay:0.1s]" />
-                      <div className="w-0.5 h-1.5 bg-[#10b981] rounded-full animate-bounce [animation-delay:0.3s]" />
-                      <div className="w-0.5 h-3.5 bg-[#10b981] rounded-full animate-bounce [animation-delay:0.2s]" />
-                    </div>
-
-                    <div className="flex flex-col text-left justify-center min-w-0">
-                      <span className="text-[8px] font-black tracking-widest text-[#10b981] leading-none uppercase">
-                        LIVE EN LIGNE
+                <AnimatePresence mode="wait" initial={false}>
+                  {showNotification ? (
+                    <motion.div
+                      key={`notif-${notificationIndex}`}
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -8 }}
+                      transition={{ duration: 0.28 }}
+                      className="w-full flex items-center gap-2.5"
+                    >
+                      <div
+                        className="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
+                        style={{
+                          background: `${notifications[notificationIndex].tint}22`,
+                          boxShadow: `0 0 14px ${notifications[notificationIndex].tint}55`,
+                        }}
+                      >
+                        {(() => {
+                          const Ic = notifications[notificationIndex].icon;
+                          return <Ic size={14} color={notifications[notificationIndex].tint} />;
+                        })()}
+                      </div>
+                      <div className="flex flex-col min-w-0 flex-1 text-left">
+                        <span
+                          className="text-[8.5px] font-black tracking-widest uppercase leading-none"
+                          style={{ color: notifications[notificationIndex].tint }}
+                        >
+                          {notifications[notificationIndex].title}
+                        </span>
+                        <span className="text-[9.5px] font-medium text-zinc-200 truncate mt-0.5 leading-tight">
+                          {notifications[notificationIndex].body}
+                        </span>
+                      </div>
+                      <span className="text-[7.5px] font-mono text-zinc-500 shrink-0 select-none">
+                        à l'instant
                       </span>
-                      <span className="text-[9px] font-bold text-zinc-100 truncate mt-0.5">
-                        {activeProject ? "Marie January" : "Marie Janvier"}
-                      </span>
-                    </div>
-
-                    <div className="px-1.5 py-0.5 rounded bg-zinc-900 text-zinc-400 border border-white/5 text-[7px] font-black uppercase tracking-wider shrink-0 select-none">
-                      Active
-                    </div>
-                  </motion.div>
-                )}
+                    </motion.div>
+                  ) : isIslandHovered ? (
+                    <motion.div
+                      key="island-live"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="w-full flex items-center justify-between gap-1.5"
+                    >
+                      <div className="flex items-center gap-0.5 shrink-0">
+                        <div className="w-0.5 h-3 bg-[#10b981] rounded-full animate-bounce [animation-delay:0.1s]" />
+                        <div className="w-0.5 h-1.5 bg-[#10b981] rounded-full animate-bounce [animation-delay:0.3s]" />
+                        <div className="w-0.5 h-3.5 bg-[#10b981] rounded-full animate-bounce [animation-delay:0.2s]" />
+                      </div>
+                      <div className="flex flex-col text-left justify-center min-w-0">
+                        <span className="text-[8px] font-black tracking-widest text-[#10b981] leading-none uppercase">
+                          LIVE EN LIGNE
+                        </span>
+                        <span className="text-[9px] font-bold text-zinc-100 truncate mt-0.5">
+                          {activeProject ? "Marie January" : "Marie Janvier"}
+                        </span>
+                      </div>
+                      <div className="px-1.5 py-0.5 rounded bg-zinc-900 text-zinc-400 border border-white/5 text-[7px] font-black uppercase tracking-wider shrink-0 select-none">
+                        Active
+                      </div>
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="island-idle"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="w-full flex items-center justify-between"
+                    >
+                      <div className="w-1.5 h-1.5 rounded-full bg-zinc-800 border border-white/5 shrink-0 animate-pulse" />
+                      <div className="w-12 h-0.5 bg-zinc-900 rounded-full shrink-0" />
+                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-950 border border-emerald-900/40 flex items-center justify-center shrink-0">
+                        <div className="w-0.5 h-0.5 rounded-full bg-emerald-400" />
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </motion.div>
+
 
               {/* 3D Animated Padlock Indicator under Dynamic Island */}
               <div className="absolute top-[38px] left-1/2 -translate-x-1/2 z-50 flex flex-col items-center pointer-events-none">
@@ -903,14 +988,14 @@ export const Hero = () => {
                     style={{ opacity: isMobile ? mobilePhoneDetailsOpacity : 1 }}
                     exit={{ opacity: 0, x: 25 }}
                     transition={{ duration: 0.4 }}
-                    className={`absolute right-4 bottom-48 flex flex-col gap-2.5 z-30 ${isMobile && !isScrolled ? "hidden" : "flex"}`}
+                    className={`absolute right-3 top-20 flex flex-col gap-2.5 z-30 ${isMobile && !isScrolled ? "hidden" : "flex"}`}
                   >
                     {[Facebook, Twitter, Youtube, Linkedin].map((Icon, idx) => (
                       <button
                         key={idx}
-                        className="w-7.5 h-7.5 rounded-full bg-zinc-950/70 backdrop-blur-md border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-brand-orange hover:border-brand-orange/20 hover:scale-105 transition-all duration-300 pointer-events-auto"
+                        className="w-10 h-10 rounded-full bg-zinc-950/70 backdrop-blur-md border border-white/10 flex items-center justify-center text-zinc-300 hover:text-white hover:bg-brand-orange hover:border-brand-orange/20 hover:scale-105 transition-all duration-300 pointer-events-auto"
                       >
-                        <Icon size={11} />
+                        <Icon size={17} />
                       </button>
                     ))}
                   </motion.div>
@@ -920,7 +1005,7 @@ export const Hero = () => {
               {/* Bottom Card Content */}
               <motion.div
                 style={{ opacity: isMobile ? mobilePhoneDetailsOpacity : 1, y: isMobile ? mobilePhoneDetailsY : 0 }}
-                className={`absolute bottom-5 left-5 right-5 z-20 ${isMobile && !isScrolled ? "hidden" : "block"}`}
+                className={`absolute bottom-24 left-5 right-5 z-20 ${isMobile && !isScrolled ? "hidden" : "block"}`}
               >
                 <AnimatePresence mode="wait">
                   {!activeProject ? (
