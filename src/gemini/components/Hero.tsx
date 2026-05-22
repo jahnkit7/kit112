@@ -1086,7 +1086,7 @@ export const Hero = () => {
           <div
             className={
               isMobile
-                ? "fixed inset-x-0 top-[4vh] z-[45] mx-auto h-[92vh] max-h-[900px] w-[92vw] max-w-[460px] overflow-hidden rounded-[40px] pointer-events-none lg:static lg:h-auto lg:max-h-none lg:w-auto lg:max-w-none lg:overflow-visible lg:rounded-none"
+                ? "fixed inset-x-0 top-[4vh] z-[45] mx-auto h-[92vh] max-h-[900px] w-[92vw] max-w-[460px] overflow-hidden rounded-[52px] border-[10px] border-transparent box-border pointer-events-none lg:static lg:h-auto lg:max-h-none lg:w-auto lg:max-w-none lg:overflow-visible lg:rounded-none lg:border-0"
                 : "contents"
             }
           >
