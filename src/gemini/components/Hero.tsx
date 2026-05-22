@@ -1079,13 +1079,27 @@ export const Hero = () => {
             </motion.div>
           </div>
 
+          {/* Mobile: spacer to preserve document scroll height */}
+          {isMobile && <div aria-hidden style={{ height: streamHeight }} />}
+
           {/* Right Column: Scrollable Content Stream */}
+          <div
+            className={
+              isMobile
+                ? "fixed inset-x-0 top-[4vh] z-[45] mx-auto h-[92vh] max-h-[900px] w-[92vw] max-w-[460px] overflow-hidden rounded-[40px] pointer-events-none lg:static lg:h-auto lg:max-h-none lg:w-auto lg:max-w-none lg:overflow-visible lg:rounded-none"
+                : "contents"
+            }
+          >
           <motion.div
+            ref={streamInnerRef}
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            style={{ opacity: isMobile ? mobileStreamOpacity : 1, y: isMobile ? mobileStreamY : 0 }}
-            className={`flex flex-col gap-24 lg:gap-32 py-4 lg:py-6 relative z-40 w-full max-w-[500px] lg:max-w-none min-w-0 mx-auto px-5 sm:px-8 lg:pl-0 lg:pr-4 pt-[106vh] pb-32 lg:pt-2 transition-all duration-500 ${
+            style={{
+              opacity: isMobile ? mobileStreamOpacity : 1,
+              y: isMobile ? mobileStreamTranslateY : 0,
+            }}
+            className={`flex flex-col gap-24 lg:gap-32 py-4 lg:py-6 relative z-40 w-full max-w-[500px] lg:max-w-none min-w-0 mx-auto px-8 sm:px-10 lg:pl-0 lg:pr-4 pt-[106vh] pb-32 lg:pt-2 transition-opacity duration-500 ${
               isMobile && !isScrolled ? "pointer-events-none" : "pointer-events-auto"
             }`}
           >
