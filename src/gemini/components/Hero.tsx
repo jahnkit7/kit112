@@ -1776,34 +1776,8 @@ export const Hero = () => {
                 </CardsContainer>
               </ContainerScroll>
 
-              {/* Script #3 — Scroller: horizontal scroll through all testimonials */}
-              <div className="pt-4">
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-[9px] font-mono tracking-widest text-zinc-500 uppercase font-bold">
-                    Toutes les voix · scroll horizontal
-                  </span>
-                </div>
-                <Scroller overflow="x" height={260} withButtons childrenContainerClassName="gap-4 pr-12">
-                  {testimonialsData.map((t) => (
-                    <div
-                      key={t.id}
-                      className="w-[320px] h-full bg-zinc-950 border border-white/5 rounded-2xl p-6 flex flex-col justify-between"
-                    >
-                      <p className="text-sm text-white/85 leading-relaxed italic line-clamp-5">
-                        “{t.quote}”
-                      </p>
-                      <div className="flex items-center gap-3 pt-4 border-t border-white/5 mt-4">
-                        <img src={t.avatar} alt={t.author} className="w-9 h-9 rounded-full object-cover border border-white/10" />
-                        <div>
-                          <div className="text-white text-xs font-black tracking-tight">{t.author}</div>
-                          <div className="text-zinc-500 text-[9px] font-mono uppercase tracking-widest mt-0.5">{t.role}</div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </Scroller>
-              </div>
             </motion.div>
+
 
 
 
