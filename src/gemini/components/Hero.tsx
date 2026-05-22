@@ -669,38 +669,38 @@ export const Hero = () => {
           <div className="absolute inset-0 rounded-[40px] overflow-hidden">
 
 
-            <div className="absolute bottom-3 inset-x-3 z-20 bg-zinc-950/95 border border-white/10 rounded-[28px] p-2.5 flex items-center justify-around shadow-[0_20px_50px_rgba(0,0,0,0.85)] pointer-events-auto">
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 bg-black/95 rounded-full px-4 py-3 flex items-center gap-2 shadow-[0_20px_50px_rgba(0,0,0,0.85)] pointer-events-auto ring-1 ring-white/5">
               {dockItems.map((item) => {
                 const Icon = item.icon;
-                const isActive = activeSection === item.id;
+                const isActive = activeDockAction === item.id;
+                const handleClick = () => {
+                  setActiveDockAction(item.id);
+                  if (window.navigator?.vibrate) window.navigator.vibrate(15);
+                  if (item.action === "gallery") {
+                    setGalleryOpen(true);
+                  } else if (item.href) {
+                    window.open(item.href, item.href.startsWith("http") ? "_blank" : "_self");
+                  }
+                };
                 return (
                   <button
                     key={item.id}
-                    onClick={() => {
-                      scrollToSection(item.id);
-                      if (window.navigator?.vibrate) {
-                        window.navigator.vibrate(15);
-                      }
-                    }}
-                    className="flex flex-col items-center justify-center relative w-11 h-11 rounded-2xl transition-all duration-300 pointer-events-auto"
+                    onClick={handleClick}
+                    aria-label={item.label}
+                    className="flex flex-col items-center justify-center relative w-12 h-12 rounded-full transition-all duration-300 pointer-events-auto"
                   >
-                    {isActive && (
-                      <motion.div
-                        layoutId="activeDockGlow"
-                        className="absolute inset-0 bg-white/5 border border-white/10 rounded-2xl -z-10"
-                        transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                      />
-                    )}
                     <Icon
-                      size={18}
+                      size={22}
                       className={`transition-all duration-300 ${
-                        isActive ? "text-[#10b981] scale-110 drop-shadow-[0_0_8px_rgba(10,185,129,0.5)]" : "text-zinc-500 hover:text-zinc-300"
+                        isActive
+                          ? "text-[#10b981] scale-110 drop-shadow-[0_0_8px_rgba(16,185,129,0.55)]"
+                          : "text-zinc-400 hover:text-zinc-200"
                       }`}
                     />
                     {isActive && (
                       <motion.div
                         layoutId="activeDockDot"
-                        className="absolute -bottom-1 w-1 h-1 rounded-full bg-[#10b981]"
+                        className="absolute -bottom-0.5 w-1 h-1 rounded-full bg-[#10b981]"
                         transition={{ type: "spring", stiffness: 380, damping: 30 }}
                       />
                     )}
