@@ -640,13 +640,6 @@ export const Hero = () => {
         <img src={mjkLogo} alt="MJK" className="h-7 w-auto" />
       </div>
 
-      {/* Mobile phone-edge mask gradients — content fades into bezel top & bottom */}
-      <div className={`fixed top-0 inset-x-0 h-[14vh] z-[45] lg:hidden pointer-events-none bg-gradient-to-b from-[#0a0a0a] via-[#0a0a0a]/85 to-transparent transition-opacity duration-500 ${
-        isMobile && isScrolled ? "opacity-100" : "opacity-0"
-      }`} />
-      <div className={`fixed bottom-0 inset-x-0 h-[18vh] z-[45] lg:hidden pointer-events-none bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/90 to-transparent transition-opacity duration-500 ${
-        isMobile && isScrolled ? "opacity-100" : "opacity-0"
-      }`} />
 
       <div className="max-w-[1600px] mx-auto w-full px-0 lg:px-10 relative z-10 py-0 lg:py-6">
         {/* Sticky Split Grid */}
@@ -666,6 +659,16 @@ export const Hero = () => {
                   : "group relative w-full max-w-[380px] xl:max-w-[410px] 2xl:max-w-[440px] shrink-0 h-[calc(100vh-3rem)] max-h-[820px] rounded-[44px] overflow-hidden border-[9px] border-[#161619] shadow-[0_35px_80px_rgba(0,0,0,0.95)] bg-zinc-950 ring-1 ring-white/10 pointer-events-auto"
               }
             >
+              {/* Inner bezel edge masks — content fades behind the phone frame */}
+              {isMobile && (
+                <>
+                  <div className={`pointer-events-none absolute top-0 inset-x-0 h-[15%] z-[48] bg-gradient-to-b from-[#0a0a0a] via-[#0a0a0a]/85 to-transparent transition-opacity duration-500 ${isScrolled ? "opacity-100" : "opacity-0"}`} />
+                  <div className={`pointer-events-none absolute bottom-0 inset-x-0 h-[22%] z-[48] bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/92 to-transparent transition-opacity duration-500 ${isScrolled ? "opacity-100" : "opacity-0"}`} />
+                  <div className={`pointer-events-none absolute inset-y-0 left-0 w-8 z-[48] bg-gradient-to-r from-[#0a0a0a]/95 via-[#0a0a0a]/55 to-transparent transition-opacity duration-500 ${isScrolled ? "opacity-100" : "opacity-0"}`} />
+                  <div className={`pointer-events-none absolute inset-y-0 right-0 w-8 z-[48] bg-gradient-to-l from-[#0a0a0a]/95 via-[#0a0a0a]/55 to-transparent transition-opacity duration-500 ${isScrolled ? "opacity-100" : "opacity-0"}`} />
+                </>
+              )}
+
               {/* Phone Speaker Slit & Interactive Dynamic Island / Notch Accent */}
               <motion.div
                 onMouseEnter={() => setIsIslandHovered(true)}
@@ -1835,53 +1838,52 @@ export const Hero = () => {
                   </div>
                 </div>
               </div>
+
+              {/* Interactive Smartphone Style Dock — inside phone, mobile only */}
+              <div className="absolute bottom-3 inset-x-3 z-[60] bg-zinc-950/75 backdrop-blur-xl border border-white/10 rounded-[28px] p-2.5 flex items-center justify-around shadow-[0_20px_50px_rgba(0,0,0,0.85)] lg:hidden pointer-events-auto">
+                {dockItems.map((item) => {
+                  const Icon = item.icon;
+                  const isActive = activeSection === item.id;
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={() => {
+                        scrollToSection(item.id);
+                        if (window.navigator?.vibrate) {
+                          window.navigator.vibrate(15);
+                        }
+                      }}
+                      className="flex flex-col items-center justify-center relative w-11 h-11 rounded-2xl transition-all duration-300 pointer-events-auto"
+                    >
+                      {isActive && (
+                        <motion.div
+                          layoutId="activeDockGlow"
+                          className="absolute inset-0 bg-white/5 border border-white/10 rounded-2xl -z-10"
+                          transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                        />
+                      )}
+                      <Icon
+                        size={18}
+                        className={`transition-all duration-300 ${
+                          isActive ? "text-[#10b981] scale-110 drop-shadow-[0_0_8px_rgba(10,185,129,0.5)]" : "text-zinc-500 hover:text-zinc-300"
+                        }`}
+                      />
+                      {isActive && (
+                        <motion.div
+                          layoutId="activeDockDot"
+                          className="absolute -bottom-1 w-1 h-1 rounded-full bg-[#10b981]"
+                          transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                        />
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
             </motion.div>
           </motion.div>
         </div>
       </div>
 
-      {/* Interactive Smartphone Style Dock only on mobile */}
-      <div className={`fixed bottom-6 inset-x-4 max-w-[340px] mx-auto bg-zinc-950/75 backdrop-blur-xl border border-white/10 rounded-[28px] p-2.5 z-[55] flex items-center justify-around shadow-[0_20px_50px_rgba(0,0,0,0.85)] lg:hidden pointer-events-auto transition-all duration-500 opacity-100 translate-y-0`}>
-        {dockItems.map((item) => {
-          const Icon = item.icon;
-          const isActive = activeSection === item.id;
-          return (
-            <button
-              key={item.id}
-              onClick={() => {
-                scrollToSection(item.id);
-                if (window.navigator?.vibrate) {
-                  window.navigator.vibrate(15);
-                }
-              }}
-              className="flex flex-col items-center justify-center relative w-12 h-12 rounded-2xl transition-all duration-300 pointer-events-auto"
-            >
-              {/* Glow indicator backdrop */}
-              {isActive && (
-                <motion.div
-                  layoutId="activeDockGlow"
-                  className="absolute inset-0 bg-white/5 border border-white/10 rounded-2xl -z-10"
-                  transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                />
-              )}
-              <Icon
-                size={18}
-                className={`transition-all duration-300 ${
-                  isActive ? "text-[#10b981] scale-110 drop-shadow-[0_0_8px_rgba(10,185,129,0.5)]" : "text-zinc-500 hover:text-zinc-300"
-                }`}
-              />
-              {/* Under dot */}
-              {isActive && (
-                <motion.div
-                  layoutId="activeDockDot"
-                  className="absolute -bottom-1 w-1 h-1 rounded-full bg-[#10b981]"
-                  transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                />
-              )}
-            </button>
-          );
-        })}
-      </div>
 
       {/* Full-screen high-quality project Image Lightbox viewer */}
       <ImageViewer
