@@ -200,26 +200,6 @@ export function VerticalImageStack({ images, className = "" }: VerticalImageStac
         <ChevronDown size={16} />
       </button>
 
-      {/* Hidden helper to keep isActive referenced (wheel handler attached below) */}
-      <WheelCapture active={isActive} onWheel={(dir) => navigate(dir)} />
     </div>
   );
-}
-
-function WheelCapture({
-  active,
-  onWheel,
-}: {
-  active: boolean;
-  onWheel: (dir: number) => void;
-}) {
-  useEffect(() => {
-    if (!active) return;
-    const handler = (e: WheelEvent) => {
-      if (Math.abs(e.deltaY) > 30) onWheel(e.deltaY > 0 ? 1 : -1);
-    };
-    window.addEventListener("wheel", handler, { passive: true });
-    return () => window.removeEventListener("wheel", handler);
-  }, [active, onWheel]);
-  return null;
 }
