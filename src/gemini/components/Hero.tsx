@@ -667,7 +667,7 @@ export const Hero = () => {
           <div className="absolute inset-0 rounded-[40px] overflow-hidden">
 
 
-            <div className="absolute bottom-3 inset-x-3 z-20 bg-zinc-950/75 backdrop-blur-xl border border-white/10 rounded-[28px] p-2.5 flex items-center justify-around shadow-[0_20px_50px_rgba(0,0,0,0.85)] pointer-events-auto">
+            <div className="absolute bottom-3 inset-x-3 z-20 bg-zinc-950/95 border border-white/10 rounded-[28px] p-2.5 flex items-center justify-around shadow-[0_20px_50px_rgba(0,0,0,0.85)] pointer-events-auto">
               {dockItems.map((item) => {
                 const Icon = item.icon;
                 const isActive = activeSection === item.id;
