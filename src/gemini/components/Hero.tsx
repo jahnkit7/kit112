@@ -43,6 +43,7 @@ import {
   Sparkles,
   Activity,
   CheckCircle2,
+  FileText,
 } from "@/components/icons/hugeicons";
 import { Project } from "../types";
 import {
