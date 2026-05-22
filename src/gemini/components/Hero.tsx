@@ -1156,14 +1156,14 @@ export const Hero = () => {
                     style={{ opacity: isMobile ? mobilePhoneDetailsOpacity : 1 }}
                     exit={{ opacity: 0, x: 25 }}
                     transition={{ duration: 0.4 }}
-                    className={`absolute right-3 top-20 flex flex-col gap-2.5 z-30 ${isMobile && !isScrolled ? "hidden" : "flex"}`}
+                    className={`absolute right-3 top-20 flex flex-col gap-1.5 z-30 ${isMobile && !isScrolled ? "hidden" : "flex"}`}
                   >
                     {[Facebook, Twitter, Youtube, Linkedin].map((Icon, idx) => (
                       <button
                         key={idx}
-                        className="w-10 h-10 rounded-full bg-zinc-950/70 backdrop-blur-md border border-white/10 flex items-center justify-center text-zinc-300 hover:text-white hover:bg-brand-orange hover:border-brand-orange/20 hover:scale-105 transition-all duration-300 pointer-events-auto"
+                        className="w-5 h-5 rounded-full bg-zinc-950/70 backdrop-blur-md border border-white/10 flex items-center justify-center text-zinc-300 hover:text-white hover:bg-brand-orange hover:border-brand-orange/20 hover:scale-105 transition-all duration-300 pointer-events-auto"
                       >
-                        <Icon size={17} />
+                        <Icon size={10} />
                       </button>
                     ))}
                   </motion.div>
