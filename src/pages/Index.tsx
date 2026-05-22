@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { motion, useSpring, useMotionValue } from "motion/react";
-import { Navbar } from "@/gemini/components/Navbar";
 import { Hero } from "@/gemini/components/Hero";
 import { Preloader } from "@/gemini/components/Preloader";
 import { CinematicFooter } from "@/gemini/components/ui/motion-footer";
@@ -45,7 +44,6 @@ const Index = () => {
         <>
           <CustomCursor />
           <NoiseOverlay />
-          <Navbar />
           <main>
             <Hero />
           </main>
