@@ -1005,7 +1005,7 @@ export const Hero = () => {
               {/* Bottom Card Content */}
               <motion.div
                 style={{ opacity: isMobile ? mobilePhoneDetailsOpacity : 1, y: isMobile ? mobilePhoneDetailsY : 0 }}
-                className={`absolute bottom-5 left-5 right-5 z-20 ${isMobile && !isScrolled ? "hidden" : "block"}`}
+                className={`absolute bottom-24 left-5 right-5 z-20 ${isMobile && !isScrolled ? "hidden" : "block"}`}
               >
                 <AnimatePresence mode="wait">
                   {!activeProject ? (
