@@ -71,6 +71,11 @@ import ImmersiveScrollGallery from "@/components/ui/immersive-scroll-gallery";
 import { ContainerScroll, CardsContainer, CardTransformed } from "@/components/ui/animated-cards-stack";
 import mjkLogo from "@/assets/mjk-logo.svg";
 
+// Lightweight inline placeholder used to skip loading heavy portfolio assets
+// while we debug performance. Replace these usages with real images later.
+const PLACEHOLDER_IMG =
+  "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 3'><rect width='4' height='3' fill='%23222'/><text x='2' y='1.7' font-family='monospace' font-size='0.35' fill='%23666' text-anchor='middle'>placeholder</text></svg>";
+
 interface ParcoursItemProps {
   title: string;
   subtitle: string;
@@ -1106,7 +1111,7 @@ export const Hero = () => {
                     transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
                     className={`absolute inset-0 w-full h-full object-cover scale-102 transition-all duration-1000 ${
                       isMobile && isScrolled
-                        ? "grayscale brightness-[0.55]"
+                        ? "grayscale-0 brightness-[0.95]"
                         : "grayscale-0 brightness-[0.9] group-hover:grayscale group-hover:brightness-[0.55]"
                     }`}
                   />
@@ -1151,14 +1156,14 @@ export const Hero = () => {
                     style={{ opacity: isMobile ? mobilePhoneDetailsOpacity : 1 }}
                     exit={{ opacity: 0, x: 25 }}
                     transition={{ duration: 0.4 }}
-                    className={`absolute right-3 top-20 flex flex-col gap-2.5 z-30 ${isMobile && !isScrolled ? "hidden" : "flex"}`}
+                    className={`absolute right-3 top-20 flex flex-col gap-1.5 z-30 ${isMobile && !isScrolled ? "hidden" : "flex"}`}
                   >
                     {[Facebook, Twitter, Youtube, Linkedin].map((Icon, idx) => (
                       <button
                         key={idx}
-                        className="w-10 h-10 rounded-full bg-zinc-950/70 backdrop-blur-md border border-white/10 flex items-center justify-center text-zinc-300 hover:text-white hover:bg-brand-orange hover:border-brand-orange/20 hover:scale-105 transition-all duration-300 pointer-events-auto"
+                        className="w-5 h-5 rounded-full bg-zinc-950/70 backdrop-blur-md border border-white/10 flex items-center justify-center text-zinc-300 hover:text-white hover:bg-brand-orange hover:border-brand-orange/20 hover:scale-105 transition-all duration-300 pointer-events-auto"
                       >
-                        <Icon size={17} />
+                        <Icon size={10} />
                       </button>
                     ))}
                   </motion.div>
@@ -1747,7 +1752,7 @@ export const Hero = () => {
               {/* ZoomParallax — script #6 — applied to portfolio works */}
               <ZoomParallax
                 images={filteredProjects.slice(0, 7).map((p) => ({
-                  src: p.image,
+                  src: PLACEHOLDER_IMG,
                   alt: p.title,
                 }))}
               />
@@ -1768,7 +1773,7 @@ export const Hero = () => {
                 </h3>
               </div>
               <ScrollTiltedGrid
-                images={projects.map((p) => p.image)}
+                images={projects.map(() => PLACEHOLDER_IMG)}
                 aspectRatio="3/4"
                 maxTilt={55}
                 maxBlur={6}
@@ -2187,11 +2192,11 @@ export const Hero = () => {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.04, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                  onClick={() => setSelectedImage(p.image)}
+                  onClick={() => setSelectedImage(PLACEHOLDER_IMG)}
                   className="relative aspect-square overflow-hidden group bg-zinc-900"
                 >
                   <img
-                    src={p.image}
+                    src={PLACEHOLDER_IMG}
                     alt={p.title || `Projet ${i + 1}`}
                     loading="lazy"
                     className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 group-active:scale-95"
@@ -2241,6 +2246,46 @@ export const Hero = () => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Desktop floating dock — same pill nav as mobile */}
+      <div className="hidden lg:flex fixed bottom-6 left-1/2 -translate-x-1/2 z-[120] bg-black/95 rounded-full px-4 py-3 items-center gap-2 shadow-[0_20px_50px_rgba(0,0,0,0.85)] ring-1 ring-white/10 backdrop-blur-md">
+        {dockItems.map((item) => {
+          const Icon = item.icon;
+          const isActive = activeDockAction === item.id;
+          const handleClick = () => {
+            setActiveDockAction(item.id);
+            if (item.action === "gallery") {
+              setGalleryOpen(true);
+            } else if (item.id === "phone" || item.id === "message" || item.id === "whatsapp") {
+              if (item.href) window.open(item.href, "_self");
+            }
+          };
+          return (
+            <button
+              key={item.id}
+              onClick={handleClick}
+              aria-label={item.label}
+              className="flex flex-col items-center justify-center relative w-12 h-12 rounded-full transition-all duration-300"
+            >
+              <Icon
+                size={22}
+                className={`transition-all duration-300 ${
+                  isActive
+                    ? "text-[#10b981] scale-110 drop-shadow-[0_0_8px_rgba(16,185,129,0.55)]"
+                    : "text-zinc-400 hover:text-zinc-200"
+                }`}
+              />
+              {isActive && (
+                <motion.div
+                  layoutId="activeDockDotDesktop"
+                  className="absolute -bottom-0.5 w-1 h-1 rounded-full bg-[#10b981]"
+                  transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                />
+              )}
+            </button>
+          );
+        })}
+      </div>
     </section>
   );
 };
