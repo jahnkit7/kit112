@@ -1520,8 +1520,6 @@ export const Hero = () => {
               />
             </div>
 
-            {/* CinematicJourney — fullscreen plein écran + scènes épinglées, juste après Univers Visuel */}
-            <CinematicJourney />
 
             {/* Stream Part 6: Tools & Expertise Section */}
             <motion.div
