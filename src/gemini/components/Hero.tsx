@@ -59,7 +59,7 @@ import { ZoomParallax } from "@/components/ui/zoom-parallax";
 import { ScrollTiltedGrid } from "@/components/ui/scroll-tilted-grid";
 import { Scroller } from "@/components/ui/scroller-1";
 import ImmersiveScrollGallery from "@/components/ui/immersive-scroll-gallery";
-import { CinematicJourney } from "@/gemini/components/CinematicJourney";
+
 import { ContainerScroll, CardsContainer, CardTransformed } from "@/components/ui/animated-cards-stack";
 import mjkLogo from "@/assets/mjk-logo.svg";
 
