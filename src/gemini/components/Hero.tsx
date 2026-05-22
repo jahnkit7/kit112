@@ -244,7 +244,7 @@ const ExpertiseCard = ({ item, index, meta }: ExpertiseCardProps) => {
     </div>
   );
 
-  if (reduceMotion || isMobileCard) {
+  if (reduceMotion) {
     return (
       <article ref={ref} className="group relative h-full min-h-[320px]">
         {cardShell}
