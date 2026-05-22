@@ -535,11 +535,10 @@ export const Hero = () => {
   };
 
   const dockItems = [
-    { id: "home", label: "Accueil", icon: Home },
-    { id: "about", label: "Vision", icon: User },
-    { id: "parcours", label: "Parcours", icon: Briefcase },
-    { id: "expertise", label: "Expertise", icon: Target },
-    { id: "contact", label: "Contact", icon: Mail },
+    { id: "phone", label: "Appeler", icon: Phone, href: "tel:+221781221670" },
+    { id: "message", label: "Message", icon: MessageSquare, href: "sms:+221781221670" },
+    { id: "whatsapp", label: "WhatsApp", icon: Whatsapp, href: "https://wa.me/221781221670" },
+    { id: "gallery", label: "Galerie", icon: GalleryAlbum, action: "gallery" as const },
   ];
 
   const handleSelectProject = (project: Project | null) => {
