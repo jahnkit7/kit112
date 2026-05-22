@@ -63,7 +63,7 @@ export const ContainerScroll: React.FC<React.HTMLAttributes<HTMLDivElement>> = (
 };
 ContainerScroll.displayName = "ContainerScroll";
 
-export const CardsContainer: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
+export const CardsContainer: React.FC<HTMLMotionProps<"div">> = ({
   children,
   className,
   style,
