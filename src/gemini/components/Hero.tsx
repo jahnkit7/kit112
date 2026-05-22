@@ -64,6 +64,7 @@ import {
   staggerItem,
 } from "./CinematicReveal";
 import { ZoomParallax } from "@/components/ui/zoom-parallax";
+import { VerticalImageStack } from "@/components/ui/vertical-image-stack";
 import { ScrollTiltedGrid } from "@/components/ui/scroll-tilted-grid";
 import { Scroller } from "@/components/ui/scroller-1";
 import ImmersiveScrollGallery from "@/components/ui/immersive-scroll-gallery";
@@ -1780,11 +1781,15 @@ export const Hero = () => {
                 </div>
               </div>
 
-              {/* ZoomParallax — script #6 — applied to portfolio works */}
-              <ZoomParallax
+              {/* Vertical image stack — interactive portfolio showcase */}
+              <VerticalImageStack
                 images={filteredProjects.slice(0, 7).map((p) => ({
-                  src: PLACEHOLDER_IMG,
+                  id: p.id,
+                  src: (p.image as unknown as string) ?? PLACEHOLDER_IMG,
                   alt: p.title,
+                  title: p.title,
+                  category: p.category,
+                  year: p.year,
                 }))}
               />
 
