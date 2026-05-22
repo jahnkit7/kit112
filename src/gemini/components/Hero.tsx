@@ -1838,53 +1838,52 @@ export const Hero = () => {
                   </div>
                 </div>
               </div>
+
+              {/* Interactive Smartphone Style Dock — inside phone, mobile only */}
+              <div className="absolute bottom-3 inset-x-3 z-[60] bg-zinc-950/75 backdrop-blur-xl border border-white/10 rounded-[28px] p-2.5 flex items-center justify-around shadow-[0_20px_50px_rgba(0,0,0,0.85)] lg:hidden pointer-events-auto">
+                {dockItems.map((item) => {
+                  const Icon = item.icon;
+                  const isActive = activeSection === item.id;
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={() => {
+                        scrollToSection(item.id);
+                        if (window.navigator?.vibrate) {
+                          window.navigator.vibrate(15);
+                        }
+                      }}
+                      className="flex flex-col items-center justify-center relative w-11 h-11 rounded-2xl transition-all duration-300 pointer-events-auto"
+                    >
+                      {isActive && (
+                        <motion.div
+                          layoutId="activeDockGlow"
+                          className="absolute inset-0 bg-white/5 border border-white/10 rounded-2xl -z-10"
+                          transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                        />
+                      )}
+                      <Icon
+                        size={18}
+                        className={`transition-all duration-300 ${
+                          isActive ? "text-[#10b981] scale-110 drop-shadow-[0_0_8px_rgba(10,185,129,0.5)]" : "text-zinc-500 hover:text-zinc-300"
+                        }`}
+                      />
+                      {isActive && (
+                        <motion.div
+                          layoutId="activeDockDot"
+                          className="absolute -bottom-1 w-1 h-1 rounded-full bg-[#10b981]"
+                          transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                        />
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
             </motion.div>
           </motion.div>
         </div>
       </div>
 
-      {/* Interactive Smartphone Style Dock only on mobile */}
-      <div className={`fixed bottom-6 inset-x-4 max-w-[340px] mx-auto bg-zinc-950/75 backdrop-blur-xl border border-white/10 rounded-[28px] p-2.5 z-[55] flex items-center justify-around shadow-[0_20px_50px_rgba(0,0,0,0.85)] lg:hidden pointer-events-auto transition-all duration-500 opacity-100 translate-y-0`}>
-        {dockItems.map((item) => {
-          const Icon = item.icon;
-          const isActive = activeSection === item.id;
-          return (
-            <button
-              key={item.id}
-              onClick={() => {
-                scrollToSection(item.id);
-                if (window.navigator?.vibrate) {
-                  window.navigator.vibrate(15);
-                }
-              }}
-              className="flex flex-col items-center justify-center relative w-12 h-12 rounded-2xl transition-all duration-300 pointer-events-auto"
-            >
-              {/* Glow indicator backdrop */}
-              {isActive && (
-                <motion.div
-                  layoutId="activeDockGlow"
-                  className="absolute inset-0 bg-white/5 border border-white/10 rounded-2xl -z-10"
-                  transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                />
-              )}
-              <Icon
-                size={18}
-                className={`transition-all duration-300 ${
-                  isActive ? "text-[#10b981] scale-110 drop-shadow-[0_0_8px_rgba(10,185,129,0.5)]" : "text-zinc-500 hover:text-zinc-300"
-                }`}
-              />
-              {/* Under dot */}
-              {isActive && (
-                <motion.div
-                  layoutId="activeDockDot"
-                  className="absolute -bottom-1 w-1 h-1 rounded-full bg-[#10b981]"
-                  transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                />
-              )}
-            </button>
-          );
-        })}
-      </div>
 
       {/* Full-screen high-quality project Image Lightbox viewer */}
       <ImageViewer
