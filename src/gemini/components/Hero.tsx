@@ -660,7 +660,7 @@ export const Hero = () => {
       {/* Mobile phone screen chrome: masks are clipped to the inner screen rectangle only */}
       {isMobile && (
         <div
-          className={`fixed inset-x-0 top-[4vh] z-[55] mx-auto h-[92vh] max-h-[900px] w-[92vw] max-w-[460px] rounded-[52px] border-[10px] border-[#161619] shadow-[0_30px_80px_rgba(0,0,0,0.9)] ring-1 ring-white/10 pointer-events-none overflow-hidden transition-opacity duration-500 lg:hidden ${
+          className={`fixed inset-x-0 top-[4vh] z-[55] mx-auto h-[92vh] max-h-[900px] w-[92vw] max-w-[460px] rounded-[52px] border-[10px] border-[#161619] shadow-[0_12px_30px_rgba(0,0,0,0.7)] ring-1 ring-white/10 pointer-events-none overflow-hidden transition-opacity duration-500 lg:hidden ${
             isScrolled ? "opacity-100" : "opacity-0"
           }`}
           aria-hidden="true"
