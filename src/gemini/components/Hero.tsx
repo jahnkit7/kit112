@@ -663,10 +663,7 @@ export const Hero = () => {
           aria-hidden="true"
         >
           <div className="absolute inset-0 rounded-[40px] overflow-hidden">
-            <div className="pointer-events-none absolute top-0 inset-x-0 h-[15%] z-10 bg-gradient-to-b from-[#0a0a0a] via-[#0a0a0a]/85 to-transparent" />
-            <div className="pointer-events-none absolute bottom-0 inset-x-0 h-[24%] z-10 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/92 to-transparent" />
-            <div className="pointer-events-none absolute inset-y-0 left-0 w-8 z-10 bg-gradient-to-r from-[#0a0a0a]/95 via-[#0a0a0a]/55 to-transparent" />
-            <div className="pointer-events-none absolute inset-y-0 right-0 w-8 z-10 bg-gradient-to-l from-[#0a0a0a]/95 via-[#0a0a0a]/55 to-transparent" />
+
 
             <div className="absolute bottom-3 inset-x-3 z-20 bg-zinc-950/75 backdrop-blur-xl border border-white/10 rounded-[28px] p-2.5 flex items-center justify-around shadow-[0_20px_50px_rgba(0,0,0,0.85)] pointer-events-auto">
               {dockItems.map((item) => {
