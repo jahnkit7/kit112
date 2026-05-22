@@ -1771,28 +1771,7 @@ export const Hero = () => {
 
             </motion.div>
 
-            {/* Script #2 — ScrollTiltedGrid: Univers Visuel — placed right after Portfolio */}
-            <div className="border-t border-white/5 pt-16 space-y-8">
-              <div className="space-y-3">
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-zinc-900 border border-zinc-800 rounded-full w-fit">
-                  <div className="w-1.5 h-1.5 rounded-full bg-violet-400 shadow-[0_0_8px_2px_rgba(167,139,250,0.3)] animate-pulse" />
-                  <span className="text-[9px] font-mono tracking-widest text-[#a1a1aa] uppercase font-bold text-xs">
-                    UNIVERS VISUEL
-                  </span>
-                </div>
-                <h3 className="text-2xl md:text-4xl font-normal text-white leading-tight tracking-normal max-w-2xl mt-2">
-                  Matières, textures, atmosphères qui nourrissent chaque projet
-                </h3>
-              </div>
-              <ScrollTiltedGrid
-                images={projects.map(() => PLACEHOLDER_IMG)}
-                aspectRatio="3/4"
-                maxTilt={55}
-                maxBlur={6}
-                rounded="1.25rem"
-              />
-            </div>
-
+            {/* Univers Visuel section removed per request */}
 
             {/* Stream Part 6: Tools & Expertise Section */}
             <motion.div
