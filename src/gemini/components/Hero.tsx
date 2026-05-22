@@ -36,6 +36,10 @@ import {
   Settings,
   UtensilsCrossed,
   Printer,
+  Phone,
+  Whatsapp,
+  GalleryAlbum,
+  X,
 } from "@/components/icons/hugeicons";
 import { Project } from "../types";
 import {
