@@ -48,6 +48,9 @@ import {
   Loading03Icon,
   CheckmarkCircle01Icon,
   CreditCardIcon,
+  CallFreeIcons,
+  WhatsappFreeIcons,
+  Album02FreeIcons,
 } from "@hugeicons/core-free-icons";
 import type { ComponentProps, ComponentType } from "react";
 
