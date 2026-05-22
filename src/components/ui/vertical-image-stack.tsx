@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback, useRef } from "react";
 import { motion, type PanInfo } from "framer-motion";
 import { ChevronUp, ChevronDown } from "lucide-react";
 
@@ -23,7 +23,6 @@ export function VerticalImageStack({ images, className = "" }: VerticalImageStac
   const lastNavigationTime = useRef(0);
   const navigationCooldown = 400;
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const [isActive, setIsActive] = useState(false);
 
   const navigate = useCallback(
     (newDirection: number) => {
@@ -49,20 +48,6 @@ export function VerticalImageStack({ images, className = "" }: VerticalImageStac
     if (info.offset.y < -threshold) navigate(1);
     else if (info.offset.y > threshold) navigate(-1);
   };
-
-  // Only intercept wheel when the component is centered in view
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => setIsActive(e.intersectionRatio > 0.65));
-      },
-      { threshold: [0, 0.5, 0.65, 0.85, 1] }
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
 
   const getCardStyle = (index: number) => {
     const total = images.length;
