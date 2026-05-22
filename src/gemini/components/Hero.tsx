@@ -627,7 +627,7 @@ export const Hero = () => {
   return (
     <section ref={containerRef} className="relative bg-[#0a0a0a] min-h-screen [overflow-x:clip]">
       {/* Background Ambient Glows */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none hidden lg:block">
         <div className="absolute top-1/4 -left-1/4 w-[600px] h-[600px] bg-red-600/5 blur-[180px] rounded-full opacity-40" />
         <div className="absolute bottom-1/3 -right-1/4 w-[600px] h-[600px] bg-brand-orange/5 blur-[180px] rounded-full opacity-40" />
       </div>
