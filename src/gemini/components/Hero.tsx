@@ -167,6 +167,7 @@ const ExpertiseCard = ({ item, index, meta }: ExpertiseCardProps) => {
   });
 
   const reduceMotion = useReducedMotion();
+  const isMobileCard = typeof window !== "undefined" && window.matchMedia("(max-width: 1023px)").matches;
   const direction = index % 2 === 0 ? -1 : 1;
   const Icon = meta.icon;
 
