@@ -253,10 +253,9 @@ export function CinematicFooter() {
       // stays visible regardless of page length / ScrollTrigger staleness.
       gsap.fromTo(
         [headingRef.current, linksRef.current],
-        { y: 30, opacity: 0.001 },
+        { y: 40 },
         {
           y: 0,
-          opacity: 1,
           duration: 0.9,
           stagger: 0.15,
           ease: "power3.out",
