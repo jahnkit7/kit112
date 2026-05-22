@@ -650,12 +650,8 @@ export const Hero = () => {
         <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/85 to-[#0a0a0a]/35" />
       </div>
 
-      {/* Mobile/Tablet Top Logo Header — visible by default, hides on scroll */}
-      <div className={`fixed top-0 inset-x-0 z-[60] lg:hidden pointer-events-none flex justify-center pt-5 transition-all duration-500 ${
-        isMobile && isScrolled ? "opacity-0 -translate-y-6" : "opacity-100 translate-y-0"
-      }`}>
-        <img src={mjkLogo} alt="MJK" className="h-7 w-auto" />
-      </div>
+      {/* Mobile/Tablet top logo removed — logo now displayed inline above the headline */}
+
 
       {/* Mobile phone screen chrome: masks are clipped to the inner screen rectangle only */}
       {isMobile && (
@@ -1117,13 +1113,14 @@ export const Hero = () => {
               {/* Location & Time Row */}
               <motion.div
                 variants={itemVariants}
-                className="flex justify-between items-start border-b border-white/5 pb-8"
+                className="flex flex-col items-center gap-3 lg:flex-row lg:items-start lg:justify-between border-b border-white/5 pb-8"
               >
                 <div className="flex items-center gap-3">
                   <a href="#" className="block">
-                    <img src={mjkLogo} alt="Marie Janvier Kitcho" className="h-9 w-auto" />
+                    <img src={mjkLogo} alt="Marie Janvier Kitcho" className="h-14 lg:h-20 w-auto" />
                   </a>
                 </div>
+
 
                 <div className="text-right hidden sm:block">
                   <div className="text-white/30 text-[9px] font-black uppercase tracking-wider mb-0.5">
