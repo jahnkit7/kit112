@@ -563,6 +563,41 @@ export const Hero = () => {
     return () => clearInterval(timer);
   }, []);
 
+  // Notifications dynamiques simulées dans la Dynamic Island
+  const notifications = [
+    { icon: Sparkles, title: "Nouveau créneau", body: "Dispo dès lundi · 2 slots", tint: "#10b981" },
+    { icon: Mail, title: "Nouveau brief", body: "Startup fintech · Dakar", tint: "#FF6B35" },
+    { icon: Briefcase, title: "Projet livré", body: "GoteaT · v2 en prod", tint: "#10b981" },
+    { icon: Activity, title: "En écoute", body: "Ouvert aux collaborations", tint: "#A78BFA" },
+    { icon: CheckCircle2, title: "Mission validée", body: "Direction créative · 6 sem", tint: "#10b981" },
+    { icon: Rocket, title: "Lancement", body: "Creative Shop · phase 2", tint: "#FF6B35" },
+  ];
+
+  useEffect(() => {
+    let cancelled = false;
+    let showT: ReturnType<typeof setTimeout>;
+    const cycle = () => {
+      if (cancelled) return;
+      setShowNotification(true);
+      showT = setTimeout(() => {
+        if (cancelled) return;
+        setShowNotification(false);
+        setTimeout(() => {
+          if (cancelled) return;
+          setNotificationIndex((i) => (i + 1) % notifications.length);
+          cycle();
+        }, 1200);
+      }, 3800);
+    };
+    const initial = setTimeout(cycle, 2500);
+    return () => {
+      cancelled = true;
+      clearTimeout(initial);
+      clearTimeout(showT);
+    };
+  }, [notifications.length]);
+
+
   const { data: experiencesSetting } = useSetting("experiences");
   const experienceItems: ExperienceItem[] = experiencesSetting?.items?.length
     ? experiencesSetting.items
