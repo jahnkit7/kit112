@@ -1111,7 +1111,7 @@ export const Hero = () => {
                     transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
                     className={`absolute inset-0 w-full h-full object-cover scale-102 transition-all duration-1000 ${
                       isMobile && isScrolled
-                        ? "grayscale brightness-[0.55]"
+                        ? "grayscale-0 brightness-[0.95]"
                         : "grayscale-0 brightness-[0.9] group-hover:grayscale group-hover:brightness-[0.55]"
                     }`}
                   />
