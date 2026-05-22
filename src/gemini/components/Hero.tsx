@@ -724,7 +724,7 @@ export const Hero = () => {
               transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
               className={
                 isMobile
-                  ? `group fixed inset-x-0 top-[4vh] z-30 mx-auto w-[92vw] max-w-[460px] h-[92vh] max-h-[900px] rounded-[52px] overflow-hidden border-[10px] border-[#161619] shadow-[0_30px_80px_rgba(0,0,0,0.9)] bg-zinc-950 ring-1 ring-white/10 transition-all duration-500 ${
+                  ? `group fixed inset-x-0 top-[4vh] z-30 mx-auto w-[92vw] max-w-[460px] h-[92vh] max-h-[900px] rounded-[52px] overflow-hidden border-[10px] border-[#161619] shadow-[0_12px_30px_rgba(0,0,0,0.7)] bg-zinc-950 ring-1 ring-white/10 transition-all duration-500 ${
                       !isScrolled ? "pointer-events-none" : "pointer-events-auto"
                     }`
                   : "group relative w-full max-w-[380px] xl:max-w-[410px] 2xl:max-w-[440px] shrink-0 h-[calc(100vh-3rem)] max-h-[820px] rounded-[44px] overflow-hidden border-[9px] border-[#161619] shadow-[0_35px_80px_rgba(0,0,0,0.95)] bg-zinc-950 ring-1 ring-white/10 pointer-events-auto"
