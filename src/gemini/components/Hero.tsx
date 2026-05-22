@@ -607,6 +607,20 @@ export const Hero = () => {
   const mobilePhoneDetailsOpacity = useTransform(scrollY, [0, 45, 260, 420], [0, 1, 1, 0]);
   const mobilePhoneDetailsY = useTransform(scrollY, [260, 420], [0, 18]);
 
+  // Mobile: clip stream content to phone screen rect via fixed wrapper + translate
+  const streamInnerRef = useRef<HTMLDivElement>(null);
+  const [streamHeight, setStreamHeight] = useState(0);
+  useEffect(() => {
+    if (!isMobile || !streamInnerRef.current) return;
+    const el = streamInnerRef.current;
+    const update = () => setStreamHeight(el.offsetHeight);
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [isMobile]);
+  const mobileStreamTranslateY = useTransform(scrollY, (v) => -v);
+
 
   return (
     <section ref={containerRef} className="relative bg-[#0a0a0a] min-h-screen [overflow-x:clip]">
