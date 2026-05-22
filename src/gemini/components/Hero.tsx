@@ -1346,6 +1346,11 @@ export const Hero = () => {
                   <div className="w-16 h-0.5 bg-white/20 rounded-full cursor-grab active:bg-white/40 active:w-20 transition-all pointer-events-auto" />
                 </div>
               </motion.div>
+
+              {/* Desktop dock + immersive screens — mirrors mobile behaviour inside the phone frame */}
+              <div className="hidden lg:block absolute inset-0 z-40 pointer-events-none">
+                {dockOverlay}
+              </div>
             </motion.div>
           </div>
 
