@@ -167,6 +167,7 @@ const ExpertiseCard = ({ item, index, meta }: ExpertiseCardProps) => {
   });
 
   const reduceMotion = useReducedMotion();
+  const isMobileCard = typeof window !== "undefined" && window.matchMedia("(max-width: 1023px)").matches;
   const direction = index % 2 === 0 ? -1 : 1;
   const Icon = meta.icon;
 
@@ -243,7 +244,7 @@ const ExpertiseCard = ({ item, index, meta }: ExpertiseCardProps) => {
     </div>
   );
 
-  if (reduceMotion) {
+  if (reduceMotion || isMobileCard) {
     return (
       <article ref={ref} className="group relative h-full min-h-[320px]">
         {cardShell}
@@ -492,17 +493,19 @@ export const Hero = () => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 1024);
     };
+    let ticking = false;
     const handleScroll = () => {
-      if (window.scrollY > 30) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        setIsScrolled(window.scrollY > 30);
+        ticking = false;
+      });
     };
     handleResize();
     handleScroll();
-    window.addEventListener("resize", handleResize);
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("resize", handleResize, { passive: true });
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => {
       window.removeEventListener("resize", handleResize);
       window.removeEventListener("scroll", handleScroll);
@@ -543,7 +546,7 @@ export const Hero = () => {
   };
 
   useEffect(() => {
-    const timer = setInterval(() => setTime(new Date()), 1000);
+    const timer = setInterval(() => setTime(new Date()), 30000);
     return () => clearInterval(timer);
   }, []);
 
@@ -625,7 +628,7 @@ export const Hero = () => {
   return (
     <section ref={containerRef} className="relative bg-[#0a0a0a] min-h-screen [overflow-x:clip]">
       {/* Background Ambient Glows */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none hidden lg:block">
         <div className="absolute top-1/4 -left-1/4 w-[600px] h-[600px] bg-red-600/5 blur-[180px] rounded-full opacity-40" />
         <div className="absolute bottom-1/3 -right-1/4 w-[600px] h-[600px] bg-brand-orange/5 blur-[180px] rounded-full opacity-40" />
       </div>
@@ -657,7 +660,7 @@ export const Hero = () => {
       {/* Mobile phone screen chrome: masks are clipped to the inner screen rectangle only */}
       {isMobile && (
         <div
-          className={`fixed inset-x-0 top-[4vh] z-[55] mx-auto h-[92vh] max-h-[900px] w-[92vw] max-w-[460px] rounded-[52px] border-[10px] border-[#161619] shadow-[0_30px_80px_rgba(0,0,0,0.9)] ring-1 ring-white/10 pointer-events-none overflow-hidden transition-opacity duration-500 lg:hidden ${
+          className={`fixed inset-x-0 top-[4vh] z-[55] mx-auto h-[92vh] max-h-[900px] w-[92vw] max-w-[460px] rounded-[52px] border-[10px] border-[#161619] shadow-[0_12px_30px_rgba(0,0,0,0.7)] ring-1 ring-white/10 pointer-events-none overflow-hidden transition-opacity duration-500 lg:hidden ${
             isScrolled ? "opacity-100" : "opacity-0"
           }`}
           aria-hidden="true"
@@ -665,7 +668,7 @@ export const Hero = () => {
           <div className="absolute inset-0 rounded-[40px] overflow-hidden">
 
 
-            <div className="absolute bottom-3 inset-x-3 z-20 bg-zinc-950/75 backdrop-blur-xl border border-white/10 rounded-[28px] p-2.5 flex items-center justify-around shadow-[0_20px_50px_rgba(0,0,0,0.85)] pointer-events-auto">
+            <div className="absolute bottom-3 inset-x-3 z-20 bg-zinc-950/95 border border-white/10 rounded-[28px] p-2.5 flex items-center justify-around shadow-[0_20px_50px_rgba(0,0,0,0.85)] pointer-events-auto">
               {dockItems.map((item) => {
                 const Icon = item.icon;
                 const isActive = activeSection === item.id;
@@ -721,7 +724,7 @@ export const Hero = () => {
               transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
               className={
                 isMobile
-                  ? `group fixed inset-x-0 top-[4vh] z-30 mx-auto w-[92vw] max-w-[460px] h-[92vh] max-h-[900px] rounded-[52px] overflow-hidden border-[10px] border-[#161619] shadow-[0_30px_80px_rgba(0,0,0,0.9)] bg-zinc-950 ring-1 ring-white/10 transition-all duration-500 ${
+                  ? `group fixed inset-x-0 top-[4vh] z-30 mx-auto w-[92vw] max-w-[460px] h-[92vh] max-h-[900px] rounded-[52px] overflow-hidden border-[10px] border-[#161619] shadow-[0_12px_30px_rgba(0,0,0,0.7)] bg-zinc-950 ring-1 ring-white/10 transition-all duration-500 ${
                       !isScrolled ? "pointer-events-none" : "pointer-events-auto"
                     }`
                   : "group relative w-full max-w-[380px] xl:max-w-[410px] 2xl:max-w-[440px] shrink-0 h-[calc(100vh-3rem)] max-h-[820px] rounded-[44px] overflow-hidden border-[9px] border-[#161619] shadow-[0_35px_80px_rgba(0,0,0,0.95)] bg-zinc-950 ring-1 ring-white/10 pointer-events-auto"
