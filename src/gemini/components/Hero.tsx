@@ -64,6 +64,7 @@ import {
   staggerItem,
 } from "./CinematicReveal";
 import { ZoomParallax } from "@/components/ui/zoom-parallax";
+import { VerticalImageStack } from "@/components/ui/vertical-image-stack";
 import { ScrollTiltedGrid } from "@/components/ui/scroll-tilted-grid";
 import { Scroller } from "@/components/ui/scroller-1";
 import ImmersiveScrollGallery from "@/components/ui/immersive-scroll-gallery";
