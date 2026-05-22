@@ -493,6 +493,8 @@ export const Hero = () => {
   const [activeDockAction, setActiveDockAction] = useState<string | null>(null);
   const [galleryOpen, setGalleryOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [notificationIndex, setNotificationIndex] = useState(0);
+  const [showNotification, setShowNotification] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
