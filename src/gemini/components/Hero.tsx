@@ -2258,46 +2258,6 @@ export const Hero = () => {
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* Desktop floating dock — same pill nav as mobile */}
-      <div className="hidden lg:flex fixed bottom-6 left-1/2 -translate-x-1/2 z-[120] bg-black/95 rounded-full px-4 py-3 items-center gap-2 shadow-[0_20px_50px_rgba(0,0,0,0.85)] ring-1 ring-white/10 backdrop-blur-md">
-        {dockItems.map((item) => {
-          const Icon = item.icon;
-          const isActive = activeDockAction === item.id;
-          const handleClick = () => {
-            setActiveDockAction(item.id);
-            if (item.action === "gallery") {
-              setGalleryOpen(true);
-            } else if (item.id === "phone" || item.id === "message" || item.id === "whatsapp") {
-              if (item.href) window.open(item.href, "_self");
-            }
-          };
-          return (
-            <button
-              key={item.id}
-              onClick={handleClick}
-              aria-label={item.label}
-              className="flex flex-col items-center justify-center relative w-12 h-12 rounded-full transition-all duration-300"
-            >
-              <Icon
-                size={22}
-                className={`transition-all duration-300 ${
-                  isActive
-                    ? "text-[#10b981] scale-110 drop-shadow-[0_0_8px_rgba(16,185,129,0.55)]"
-                    : "text-zinc-400 hover:text-zinc-200"
-                }`}
-              />
-              {isActive && (
-                <motion.div
-                  layoutId="activeDockDotDesktop"
-                  className="absolute -bottom-0.5 w-1 h-1 rounded-full bg-[#10b981]"
-                  transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                />
-              )}
-            </button>
-          );
-        })}
-      </div>
     </section>
   );
 };
