@@ -640,13 +640,6 @@ export const Hero = () => {
         <img src={mjkLogo} alt="MJK" className="h-7 w-auto" />
       </div>
 
-      {/* Mobile phone-edge mask gradients — content fades into bezel top & bottom */}
-      <div className={`fixed top-0 inset-x-0 h-[14vh] z-[45] lg:hidden pointer-events-none bg-gradient-to-b from-[#0a0a0a] via-[#0a0a0a]/85 to-transparent transition-opacity duration-500 ${
-        isMobile && isScrolled ? "opacity-100" : "opacity-0"
-      }`} />
-      <div className={`fixed bottom-0 inset-x-0 h-[18vh] z-[45] lg:hidden pointer-events-none bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/90 to-transparent transition-opacity duration-500 ${
-        isMobile && isScrolled ? "opacity-100" : "opacity-0"
-      }`} />
 
       <div className="max-w-[1600px] mx-auto w-full px-0 lg:px-10 relative z-10 py-0 lg:py-6">
         {/* Sticky Split Grid */}
