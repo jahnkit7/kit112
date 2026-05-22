@@ -1752,7 +1752,7 @@ export const Hero = () => {
               {/* ZoomParallax — script #6 — applied to portfolio works */}
               <ZoomParallax
                 images={filteredProjects.slice(0, 7).map((p) => ({
-                  src: p.image,
+                  src: PLACEHOLDER_IMG,
                   alt: p.title,
                 }))}
               />
@@ -1773,7 +1773,7 @@ export const Hero = () => {
                 </h3>
               </div>
               <ScrollTiltedGrid
-                images={projects.map((p) => p.image)}
+                images={projects.map(() => PLACEHOLDER_IMG)}
                 aspectRatio="3/4"
                 maxTilt={55}
                 maxBlur={6}
