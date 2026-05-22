@@ -534,11 +534,17 @@ export const Hero = () => {
     }
   };
 
-  const dockItems = [
+  const dockItems: Array<{
+    id: string;
+    label: string;
+    icon: typeof Phone;
+    href?: string;
+    action?: "gallery";
+  }> = [
     { id: "phone", label: "Appeler", icon: Phone, href: "tel:+221781221670" },
     { id: "message", label: "Message", icon: MessageSquare, href: "sms:+221781221670" },
     { id: "whatsapp", label: "WhatsApp", icon: Whatsapp, href: "https://wa.me/221781221670" },
-    { id: "gallery", label: "Galerie", icon: GalleryAlbum, action: "gallery" as const },
+    { id: "gallery", label: "Galerie", icon: GalleryAlbum, action: "gallery" },
   ];
 
   const handleSelectProject = (project: Project | null) => {
