@@ -60,11 +60,11 @@ export function VerticalImageStack({ images, className = "" }: VerticalImageStac
   const getCardStyle = (index: number) => {
     const diff = index - currentIndex;
     if (diff === 0) return { y: 0, z: 0, scale: 1, opacity: 1, zIndex: 50, rotateX: 0 };
-    if (diff === -1) return { y: -140, z: -120, scale: 0.84, opacity: 0.55, zIndex: 40, rotateX: 10 };
-    if (diff === -2) return { y: -240, z: -240, scale: 0.7, opacity: 0.25, zIndex: 30, rotateX: 18 };
-    if (diff === 1) return { y: 140, z: -120, scale: 0.84, opacity: 0.55, zIndex: 40, rotateX: -10 };
-    if (diff === 2) return { y: 240, z: -240, scale: 0.7, opacity: 0.25, zIndex: 30, rotateX: -18 };
-    return { y: diff > 0 ? 360 : -360, z: -360, scale: 0.6, opacity: 0, zIndex: 0, rotateX: diff > 0 ? -22 : 22 };
+    if (diff === -1) return { y: -280, z: -120, scale: 0.86, opacity: 0.55, zIndex: 40, rotateX: 14 };
+    if (diff === -2) return { y: -440, z: -240, scale: 0.72, opacity: 0.22, zIndex: 30, rotateX: 22 };
+    if (diff === 1) return { y: 280, z: -120, scale: 0.86, opacity: 0.55, zIndex: 40, rotateX: -14 };
+    if (diff === 2) return { y: 440, z: -240, scale: 0.72, opacity: 0.22, zIndex: 30, rotateX: -22 };
+    return { y: diff > 0 ? 600 : -600, z: -360, scale: 0.6, opacity: 0, zIndex: 0, rotateX: diff > 0 ? -28 : 28 };
   };
 
   const isVisible = (index: number) => Math.abs(index - currentIndex) <= 2;
