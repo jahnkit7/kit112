@@ -71,6 +71,11 @@ import ImmersiveScrollGallery from "@/components/ui/immersive-scroll-gallery";
 import { ContainerScroll, CardsContainer, CardTransformed } from "@/components/ui/animated-cards-stack";
 import mjkLogo from "@/assets/mjk-logo.svg";
 
+// Lightweight inline placeholder used to skip loading heavy portfolio assets
+// while we debug performance. Replace these usages with real images later.
+const PLACEHOLDER_IMG =
+  "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 3'><rect width='4' height='3' fill='%23222'/><text x='2' y='1.7' font-family='monospace' font-size='0.35' fill='%23666' text-anchor='middle'>placeholder</text></svg>";
+
 interface ParcoursItemProps {
   title: string;
   subtitle: string;
