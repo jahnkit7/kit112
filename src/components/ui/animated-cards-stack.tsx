@@ -117,7 +117,7 @@ export const CardsContainer: React.FC<CardsContainerProps> = ({
     <motion.div
       ref={containerRef}
       className={cn(
-        "sticky left-0 top-0 flex h-[76vh] w-full items-center justify-center lg:h-screen",
+        "relative flex h-[76vh] w-full items-center justify-center lg:sticky lg:left-0 lg:top-0 lg:h-screen",
         className,
       )}
       style={{ y: pinnedY, perspective: "1000px", ...style }}
