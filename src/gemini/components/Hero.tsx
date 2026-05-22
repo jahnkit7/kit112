@@ -495,6 +495,11 @@ export const Hero = () => {
   const [activeSection, setActiveSection] = useState("home");
   const [activeDockAction, setActiveDockAction] = useState<string | null>(null);
   const [galleryOpen, setGalleryOpen] = useState(false);
+  const [dockScreen, setDockScreen] = useState<null | "phone" | "message" | "whatsapp">(null);
+  const [messageInput, setMessageInput] = useState("");
+  const [messages, setMessages] = useState<Array<{ from: "me" | "mjk"; text: string }>>([
+    { from: "mjk", text: "Salut 👋 Merci de m'écrire — dis-moi tout sur ton projet." },
+  ]);
   const [isScrolled, setIsScrolled] = useState(false);
   const [notificationIndex, setNotificationIndex] = useState(0);
   const [showNotification, setShowNotification] = useState(false);
