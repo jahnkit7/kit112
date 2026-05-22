@@ -40,6 +40,9 @@ import {
   Whatsapp,
   GalleryAlbum,
   X,
+  Sparkles,
+  Activity,
+  CheckCircle2,
 } from "@/components/icons/hugeicons";
 import { Project } from "../types";
 import {
