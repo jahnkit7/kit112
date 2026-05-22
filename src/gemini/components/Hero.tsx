@@ -1529,7 +1529,7 @@ export const Hero = () => {
                 handleSelectProject(null);
                 setActiveSection("about");
               }}
-              className="border-t border-white/5 pt-12 space-y-6"
+              className="hidden md:block border-t border-white/5 pt-12 space-y-6"
             >
               <div className="flex items-center gap-2 text-white/30 text-[10px] font-black uppercase tracking-widest">
                 <Globe size={12} className="text-brand-orange" />
