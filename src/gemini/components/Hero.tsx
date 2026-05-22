@@ -659,6 +659,16 @@ export const Hero = () => {
                   : "group relative w-full max-w-[380px] xl:max-w-[410px] 2xl:max-w-[440px] shrink-0 h-[calc(100vh-3rem)] max-h-[820px] rounded-[44px] overflow-hidden border-[9px] border-[#161619] shadow-[0_35px_80px_rgba(0,0,0,0.95)] bg-zinc-950 ring-1 ring-white/10 pointer-events-auto"
               }
             >
+              {/* Inner bezel edge masks — content fades behind the phone frame */}
+              {isMobile && (
+                <>
+                  <div className={`pointer-events-none absolute top-0 inset-x-0 h-[15%] z-[48] bg-gradient-to-b from-[#0a0a0a] via-[#0a0a0a]/85 to-transparent transition-opacity duration-500 ${isScrolled ? "opacity-100" : "opacity-0"}`} />
+                  <div className={`pointer-events-none absolute bottom-0 inset-x-0 h-[22%] z-[48] bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/92 to-transparent transition-opacity duration-500 ${isScrolled ? "opacity-100" : "opacity-0"}`} />
+                  <div className={`pointer-events-none absolute inset-y-0 left-0 w-8 z-[48] bg-gradient-to-r from-[#0a0a0a]/95 via-[#0a0a0a]/55 to-transparent transition-opacity duration-500 ${isScrolled ? "opacity-100" : "opacity-0"}`} />
+                  <div className={`pointer-events-none absolute inset-y-0 right-0 w-8 z-[48] bg-gradient-to-l from-[#0a0a0a]/95 via-[#0a0a0a]/55 to-transparent transition-opacity duration-500 ${isScrolled ? "opacity-100" : "opacity-0"}`} />
+                </>
+              )}
+
               {/* Phone Speaker Slit & Interactive Dynamic Island / Notch Accent */}
               <motion.div
                 onMouseEnter={() => setIsIslandHovered(true)}
