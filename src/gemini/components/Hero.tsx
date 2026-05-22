@@ -1978,7 +1978,7 @@ export const Hero = () => {
               </div>
 
               {/* Stacked cards reveal (scroll-driven) — dark DA */}
-              <ContainerScroll className="!min-h-[180vh]">
+              <ContainerScroll className="!min-h-[220vh]">
                 <CardsContainer>
                   {testimonialsData.map((t, idx) => (
                     <CardTransformed
@@ -1986,6 +1986,9 @@ export const Hero = () => {
                       variant="dark"
                       arrayLength={testimonialsData.length}
                       index={idx}
+                      incrementY={6}
+                      incrementZ={0}
+                      incrementRotation={(idx % 2 === 0 ? -1 : 1) * (2 + idx)}
                       className="!justify-between !p-8 md:!p-10 !rounded-[2rem] !bg-zinc-950/90 !border-white/10 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.7)]"
                     >
                       <div className="w-full space-y-6">
