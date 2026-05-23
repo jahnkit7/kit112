@@ -1839,16 +1839,11 @@ export const Hero = () => {
               className="border-t border-white/5 pt-16 space-y-12"
             >
               <div className="space-y-3">
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-zinc-900 border border-zinc-800 rounded-full w-fit">
-                  <div className="w-1.5 h-1.5 rounded-full bg-brand-orange shadow-[0_0_8px_2px_rgba(255,75,43,0.3)] animate-pulse" />
-                  <span className="text-[9px] font-mono tracking-widest text-[#a1a1aa] uppercase font-bold text-xs">
-                    CHAMP D'ACTION
-                  </span>
-                </div>
-                <h3 className="text-2xl md:text-4xl font-normal text-white leading-tight tracking-normal max-w-2xl mt-2">
+                <h3 className="text-xl md:text-4xl font-normal text-white leading-tight tracking-normal max-w-2xl">
                   Un profil hybride à l'écoute de vos ambitions stratégiques
                 </h3>
               </div>
+
 
               {(() => {
                 const cardMeta = [
