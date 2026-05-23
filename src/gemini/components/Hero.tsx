@@ -1394,7 +1394,7 @@ export const Hero = () => {
               opacity: isMobile ? mobileStreamOpacity : 1,
               y: isMobile ? mobileStreamTranslateY : 0,
             }}
-            className={`flex flex-col gap-24 lg:gap-32 py-4 lg:py-6 relative z-40 w-full max-w-[500px] lg:max-w-none min-w-0 mx-auto px-8 sm:px-10 lg:pl-0 lg:pr-4 pt-[106vh] pb-32 lg:pt-2 transition-opacity duration-500 ${
+            className={`flex flex-col gap-10 lg:gap-32 py-4 lg:py-6 relative z-40 w-full max-w-[500px] lg:max-w-none min-w-0 mx-auto px-8 sm:px-10 lg:pl-0 lg:pr-4 pt-[106vh] pb-16 lg:pb-32 lg:pt-2 transition-opacity duration-500 ${
               isMobile && !isScrolled ? "pointer-events-none" : "pointer-events-auto"
             }`}
           >
