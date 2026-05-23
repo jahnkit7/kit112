@@ -230,7 +230,7 @@ const ExpertiseCard = ({ item, index, meta }: ExpertiseCardProps) => {
     >
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/30 via-black/32 to-black/70" />
       <div
-        className="pointer-events-none absolute inset-0 opacity-[0.08] transition-opacity duration-700 group-hover:opacity-[0.14]"
+        className="pointer-events-none absolute inset-0 opacity-[0.08]"
         style={{
           backgroundImage:
             "linear-gradient(to right, rgba(255,255,255,0.4) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.4) 1px, transparent 1px)",
@@ -240,11 +240,11 @@ const ExpertiseCard = ({ item, index, meta }: ExpertiseCardProps) => {
         }}
       />
       <div
-        className="pointer-events-none absolute -bottom-24 -right-16 h-64 w-64 rounded-full blur-3xl opacity-40 transition-opacity duration-700 group-hover:opacity-60"
-        style={{ background: `radial-gradient(circle, ${meta.accent} 0%, transparent 70%)` }}
+        className="pointer-events-none absolute -bottom-16 -right-12 h-48 w-48 rounded-full opacity-25"
+        style={{ background: meta.accent }}
       />
       <span
-        className="pointer-events-none absolute -top-6 -right-2 select-none font-display text-[8rem] font-black leading-none tracking-tighter text-white/[0.06] transition-colors duration-700 group-hover:text-white/[0.1]"
+        className="pointer-events-none absolute -top-6 -right-2 select-none font-display text-[8rem] font-black leading-none tracking-tighter text-white/[0.06]"
         aria-hidden
       >
         {item.id}
@@ -261,10 +261,10 @@ const ExpertiseCard = ({ item, index, meta }: ExpertiseCardProps) => {
       <div className="mb-10 flex items-start justify-between">
         <div className="relative">
           <div
-            className="absolute inset-0 rounded-2xl blur-xl opacity-50 transition-opacity duration-500 group-hover:opacity-90"
+            className="absolute inset-0 rounded-2xl opacity-25"
             style={{ background: meta.accent }}
           />
-          <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-black/35 backdrop-blur-md transition-transform duration-500 group-hover:-rotate-6 group-hover:scale-110">
+          <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-black/45">
             <Icon className="h-5 w-5 text-white" strokeWidth={1.5} />
           </div>
         </div>
