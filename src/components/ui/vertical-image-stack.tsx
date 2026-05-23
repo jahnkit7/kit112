@@ -132,9 +132,11 @@ export function VerticalImageStack({ images, className = "" }: VerticalImageStac
               <motion.div
                 key={image.id}
                 animate={style}
-                transition={{ type: "spring", stiffness: 220, damping: 30, mass: 0.9 }}
-                className="absolute inset-0 rounded-3xl overflow-hidden border border-white/10 bg-zinc-900 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.6)] touch-pan-y"
-                style={{ transformStyle: "preserve-3d" }}
+                transition={isMobile
+                  ? { type: "tween", duration: 0.28, ease: [0.32, 0.72, 0, 1] }
+                  : { type: "spring", stiffness: 220, damping: 30, mass: 0.9 }}
+                className="absolute inset-0 rounded-3xl overflow-hidden border border-white/10 bg-zinc-900 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.6)] touch-pan-y will-change-transform"
+                style={{ transformStyle: "preserve-3d", backfaceVisibility: "hidden" }}
               >
                 <img
                   src={image.src}
