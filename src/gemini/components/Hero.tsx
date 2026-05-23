@@ -6,6 +6,7 @@ import {
   AnimatePresence,
   useMotionTemplate,
   useReducedMotion,
+  type Variants,
 } from "motion/react";
 import {
   Facebook,
@@ -68,6 +69,7 @@ import { VerticalImageStack } from "@/components/ui/vertical-image-stack";
 import { ScrollTiltedGrid } from "@/components/ui/scroll-tilted-grid";
 import { Scroller } from "@/components/ui/scroller-1";
 import ImmersiveScrollGallery from "@/components/ui/immersive-scroll-gallery";
+import { FocusRail, type FocusRailItem } from "@/components/ui/focus-rail";
 
 import { ContainerScroll, CardsContainer, CardTransformed } from "@/components/ui/animated-cards-stack";
 import mjkLogo from "@/assets/mjk-logo.svg";
@@ -82,6 +84,23 @@ const PLACEHOLDER_GRADIENTS = [
   "linear-gradient(135deg,#1b3a2a 0%,#2d5a3d 50%,#5a8a5c 100%)",
   "linear-gradient(135deg,#3d2b1f 0%,#6b3a2a 50%,#cd7f32 100%)",
 ];
+
+const PARCOURS_EASE = [0.16, 1, 0.3, 1] as const;
+
+const PARCOURS_REVEAL: Variants = {
+  hidden: { opacity: 0, y: 56, filter: "blur(14px)" },
+  show: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: { duration: 0.95, ease: PARCOURS_EASE },
+  },
+};
+
+const PARCOURS_CHILD_REVEAL: Variants = {
+  hidden: { opacity: 0, y: 24 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: PARCOURS_EASE } },
+};
 
 // Inline SVG placeholder kept for legacy modal grids (zero network cost).
 const PLACEHOLDER_IMG =
@@ -104,27 +123,45 @@ const ParcoursItem = ({
 }: ParcoursItemProps) => {
   const [expanded, setExpanded] = useState(false);
 
-  // Deterministic placeholder set per parcours
-  const heroGradient = PLACEHOLDER_GRADIENTS[index % PLACEHOLDER_GRADIENTS.length];
-  const gridGradients = Array.from({ length: 6 }, (_, i) =>
-    PLACEHOLDER_GRADIENTS[(index + i + 1) % PLACEHOLDER_GRADIENTS.length],
-  );
+  const railItems: FocusRailItem[] = Array.from({ length: 5 }, (_, i) => ({
+    id: `${index}-${i}`,
+    title: `${title.split("·").pop()?.trim() || "Projet"} ${String(i + 1).padStart(2, "0")}`,
+    description,
+    meta: year,
+    gradient: PLACEHOLDER_GRADIENTS[(index + i) % PLACEHOLDER_GRADIENTS.length],
+  }));
 
   const titleParts = title.split("·");
 
   return (
     <motion.div
-      layout
+      variants={PARCOURS_REVEAL}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, amount: 0.22 }}
       transition={{ layout: { duration: 0.45, ease: [0.16, 1, 0.3, 1] } }}
-      className="py-8 md:py-14 grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8 items-start"
+      className="py-8 md:py-14 grid grid-cols-1 md:grid-cols-12 gap-5 md:gap-8 items-start"
     >
-      <div className="md:col-span-3">
-        <span className="text-xl md:text-2xl font-black font-sans tracking-tight text-white">
+      <motion.div variants={PARCOURS_CHILD_REVEAL} className="md:col-span-3 space-y-4 md:space-y-5">
+        <span className="block text-xl md:text-2xl font-black font-sans tracking-tight text-white">
           {year}
         </span>
-      </div>
 
-      <div className="md:col-span-9 space-y-5">
+        <FocusRail items={railItems} compact className="max-w-[16rem] md:max-w-none" />
+
+        <button
+          type="button"
+          onClick={() => setExpanded((v) => !v)}
+          className="group inline-flex items-center gap-2 text-[10px] md:text-xs font-black uppercase tracking-[0.25em] text-white/60 transition hover:text-white"
+        >
+          {expanded ? "Réduire" : "Plus d'infos"}
+          <motion.span animate={{ rotate: expanded ? 180 : 0 }} transition={{ duration: 0.25 }}>
+            <ChevronDown size={14} />
+          </motion.span>
+        </button>
+      </motion.div>
+
+      <motion.div variants={PARCOURS_CHILD_REVEAL} className="md:col-span-9 space-y-4 md:space-y-5">
         <div className="space-y-3">
           <div className="text-[10px] md:text-xs font-bold tracking-[0.3em] text-white/40 uppercase">
             {subtitle}
@@ -141,56 +178,27 @@ const ParcoursItem = ({
           </p>
         </div>
 
-        {/* Portfolio preview attached to this parcours */}
-        <motion.button
-          type="button"
-          onClick={() => setExpanded((v) => !v)}
-          layout
-          className="group relative w-full overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] text-left focus:outline-none focus:ring-2 focus:ring-white/30"
-          whileTap={{ scale: 0.99 }}
-        >
-          <div
-            className="relative w-full aspect-[16/9] md:aspect-[21/9]"
-            style={{ background: heroGradient }}
-          >
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
-            <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between gap-3">
-              <span className="text-[10px] md:text-xs font-bold tracking-[0.25em] uppercase text-white/80">
-                {expanded ? "Réduire" : "Voir le projet"}
-              </span>
-              <motion.span
-                animate={{ rotate: expanded ? 180 : 0 }}
-                transition={{ duration: 0.3 }}
-                className="w-7 h-7 rounded-full bg-white/15 backdrop-blur-sm flex items-center justify-center text-white"
-              >
-                <ChevronDown size={14} />
-              </motion.span>
-            </div>
-          </div>
-        </motion.button>
-
         <AnimatePresence initial={false}>
           {expanded && (
             <motion.div
               key="content"
-              layout
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
+              initial={{ opacity: 0, height: 0, y: -8 }}
+              animate={{ opacity: 1, height: "auto", y: 0 }}
+              exit={{ opacity: 0, height: 0, y: -8 }}
               transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
               className="overflow-hidden"
             >
-              <div className="pt-5 space-y-5">
+              <div className="pt-2 md:pt-4 space-y-4 md:space-y-5">
                 <p className="text-sm md:text-base text-white/70 leading-relaxed max-w-2xl">
                   {description} Plus de détails, captures et explorations
                   visuelles à venir pour ce projet.
                 </p>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-3">
-                  {gridGradients.map((g, i) => (
+                  {railItems.map((item, i) => (
                     <div
                       key={i}
                       className="aspect-square rounded-xl border border-white/5"
-                      style={{ background: g }}
+                      style={{ background: item.gradient }}
                     />
                   ))}
                 </div>
@@ -198,7 +206,7 @@ const ParcoursItem = ({
             </motion.div>
           )}
         </AnimatePresence>
-      </div>
+      </motion.div>
     </motion.div>
   );
 };
@@ -1616,7 +1624,7 @@ export const Hero = () => {
                       className="h-[18px] text-white/50 fill-current hover:text-white hover:scale-105 transition-all duration-305"
                       xmlns="http://www.w3.org/2000/svg"
                     >
-                      <path d="M17.05 20.28c-.98.95-2.05.88-3.08.4-.7-.34-1.42-.36-2.14 0-1.09.52-1.95.42-2.88-.47C4.69 16.04 4.3 9.4 8.24 9.17c1.32.08 2.18.73 2.92.73.74 0 1.84-.78 3.32-.63( 1.57.17 2.76.84 3.42 1.85-3.14 1.88-2.61 6.02.6 7.32-.7 1.76-1.47 3.52-2.45 3.84zM15.03 6.05c1.17-1.42.92-3.13.82-3.95-.91.08-2.1.62-2.76 1.43-1.02 1.14-.85 2.87-.75 3.65.98.07 1.94-.48 2.69-1.13z" />
+                      <path d="M17.05 20.28c-.98.95-2.05.88-3.08.4-.7-.34-1.42-.36-2.14 0-1.09.52-1.95.42-2.88-.47C4.69 16.04 4.3 9.4 8.24 9.17c1.32.08 2.18.73 2.92.73.74 0 1.84-.78 3.32-.63 1.57.17 2.76.84 3.42 1.85-3.14 1.88-2.61 6.02.6 7.32-.7 1.76-1.47 3.52-2.45 3.84zM15.03 6.05c1.17-1.42.92-3.13.82-3.95-.91.08-2.1.62-2.76 1.43-1.02 1.14-.85 2.87-.75 3.65.98.07 1.94-.48 2.69-1.13z" />
                     </svg>
 
                     {/* Microsoft */}
@@ -1634,7 +1642,7 @@ export const Hero = () => {
                       className="h-[13px] text-white/50 fill-current hover:text-white hover:scale-105 transition-all duration-305"
                       xmlns="http://www.w3.org/2000/svg"
                     >
-                      <path d="M23.99 7.07c-.42 1.34-1.41 2.82-2.92 4.37-2.69 2.75-6.68 5.66-11.78 8.62-2.07 1.2-3.8 1.94-5.12 1.94-.74 0-1.27-.42-1.24-1.26.04-1.11 1-3.6 2.84-7.36 1.1-2.22 2.05-3.83 2.85-4.79.52-.63 1.05-.95 1.58-.95.4 0 .61.21.61.63s-.46 1.62-1.37 3.62c-.81 1.78-1.23 2.86-1.23 3.2 0 .52.37.78 1.11.78.36 0 1.07-.22 2.1-.64 4.36-1.78 8.94-4.82 13.56-9.1 1.28-1.16 2.5-2.07 3.5-2.07a1.05 1.05 0 0 1 .76.36c.26.27.34.61.26 1z" />
+                      <path d="M23.99 7.07c-.42 1.34-1.41 2.82-2.92 4.37-2.69 2.75-6.68 5.66-11.78 8.62-2.07 1.2-3.8 1.94-5.12 1.94-.74 0-1.27-.42-1.24-1.26.04-1.11 1-3.6 2.84-7.36 1.1-2.22 2.05-3.83 2.85-4.79.52-.63 1.05-.95 1.58-.95.4 0 .61.21.61.63s-.46 1.62-1.37 3.62c-.81 1.78-1.23 2.86-1.23 3.2 0 .52.37.78 1.11.78.36 0 1.07-.22 2.1-.64 4.36-1.78 8.94-4.82 13.56-9.1 1.28-1.16 2.5-2.07 3.5-2.07.3 0 .56.12.76.36.26.27.34.61.26 1z" />
                     </svg>
 
                     {/* Logoipsum */}
@@ -1664,7 +1672,7 @@ export const Hero = () => {
                       className="h-[18px] text-white/50 fill-current hover:text-white hover:scale-105 transition-all duration-305"
                       xmlns="http://www.w3.org/2000/svg"
                     >
-                      <path d="M17.05 20.28c-.98.95-2.05.88-3.08.4-.7-.34-1.42-.36-2.14 0-1.09.52-1.95.42-2.88-.47C4.69 16.04 4.3 9.4 8.24 9.17c1.32.08 2.18.73 2.92.73.74 0 1.84-.78 3.32-.63( 1.57.17 2.76.84 3.42 1.85-3.14 1.88-2.61 6.02.6 7.32-.7 1.76-1.47 3.52-2.45 3.84zM15.03 6.05c1.17-1.42.92-3.13.82-3.95-.91.08-2.1.62-2.76 1.43-1.02 1.14-.85 2.87-.75 3.65.98.07 1.94-.48 2.69-1.13z" />
+                      <path d="M17.05 20.28c-.98.95-2.05.88-3.08.4-.7-.34-1.42-.36-2.14 0-1.09.52-1.95.42-2.88-.47C4.69 16.04 4.3 9.4 8.24 9.17c1.32.08 2.18.73 2.92.73.74 0 1.84-.78 3.32-.63 1.57.17 2.76.84 3.42 1.85-3.14 1.88-2.61 6.02.6 7.32-.7 1.76-1.47 3.52-2.45 3.84zM15.03 6.05c1.17-1.42.92-3.13.82-3.95-.91.08-2.1.62-2.76 1.43-1.02 1.14-.85 2.87-.75 3.65.98.07 1.94-.48 2.69-1.13z" />
                     </svg>
 
                     {/* Microsoft */}
@@ -1682,7 +1690,7 @@ export const Hero = () => {
                       className="h-[13px] text-white/50 fill-current hover:text-white hover:scale-105 transition-all duration-305"
                       xmlns="http://www.w3.org/2000/svg"
                     >
-                      <path d="M23.99 7.07c-.42 1.34-1.41 2.82-2.92 4.37-2.69 2.75-6.68 5.66-11.78 8.62-2.07 1.2-3.8 1.94-5.12 1.94-.74 0-1.27-.42-1.24-1.26.04-1.11 1-3.6 2.84-7.36 1.1-2.22 2.05-3.83 2.85-4.79.52-.63 1.05-.95 1.58-.95.4 0 .61.21.61.63s-.46 1.62-1.37 3.62c-.81 1.78-1.23 2.86-1.23 3.2 0 .52.37.78 1.11.78.36 0 1.07-.22 2.1-.64 4.36-1.78 8.94-4.82 13.56-9.1 1.28-1.16 2.5-2.07 3.5-2.07a1.05 1.05 0 0 1 .76.36c.26.27.34.61.26 1z" />
+                      <path d="M23.99 7.07c-.42 1.34-1.41 2.82-2.92 4.37-2.69 2.75-6.68 5.66-11.78 8.62-2.07 1.2-3.8 1.94-5.12 1.94-.74 0-1.27-.42-1.24-1.26.04-1.11 1-3.6 2.84-7.36 1.1-2.22 2.05-3.83 2.85-4.79.52-.63 1.05-.95 1.58-.95.4 0 .61.21.61.63s-.46 1.62-1.37 3.62c-.81 1.78-1.23 2.86-1.23 3.2 0 .52.37.78 1.11.78.36 0 1.07-.22 2.1-.64 4.36-1.78 8.94-4.82 13.56-9.1 1.28-1.16 2.5-2.07 3.5-2.07.3 0 .56.12.76.36.26.27.34.61.26 1z" />
                     </svg>
 
                     {/* Logoipsum */}
