@@ -434,7 +434,7 @@ const testimonialsData = [
       "La structuration de nos processus opérationnels par Marie a radicalement changé notre efficacité sur le terrain. Une expertise rare.",
     author: "Sophie M.",
     role: "Direction Opérationnelle",
-    avatar: "/assets/images/portfolio_1_1779296273783.png",
+    avatar: PLACEHOLDER_IMG,
     logo: "PROJET ODAXIA",
   },
   {
@@ -443,7 +443,7 @@ const testimonialsData = [
       "GoteaT est la preuve vivante qu'un concept bien designé et rigoureusement exécuté peut s'imposer sur le marché dakarois.",
     author: "Amadou B.",
     role: "Partenaire Stratégique",
-    avatar: "/assets/images/portfolio_2_1779296292371.png",
+    avatar: PLACEHOLDER_IMG,
     logo: "GOTEAT",
   },
   {
@@ -461,7 +461,7 @@ const testimonialsData = [
       "Sa méthode nous a donné une direction lisible, des priorités nettes et une exécution beaucoup plus fluide dès les premières semaines.",
     author: "Aïcha N.",
     role: "Fondatrice Retail",
-    avatar: "/assets/images/portfolio_1_1779296273783.png",
+    avatar: PLACEHOLDER_IMG,
     logo: "BRAND OPS",
   },
   {
@@ -470,7 +470,7 @@ const testimonialsData = [
       "Marie a transformé une idée dispersée en expérience cohérente, désirable et prête à être lancée sans perdre notre exigence business.",
     author: "Karim S.",
     role: "CEO Studio Digital",
-    avatar: "/assets/images/portfolio_2_1779296292371.png",
+    avatar: PLACEHOLDER_IMG,
     logo: "LAUNCH STUDIO",
   },
 ];
