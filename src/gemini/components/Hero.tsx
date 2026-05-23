@@ -1726,9 +1726,10 @@ export const Hero = () => {
               </div>
 
               <StaggerList className="relative divide-y divide-white/5" stagger={0.12}>
-                {combinedData.map((item) => (
+                {combinedData.map((item, idx) => (
                   <motion.div key={item.id} variants={staggerItem}>
                     <ParcoursItem
+                      index={idx}
                       year={
                         item.date.split(" — ")[0].replace(/\D/g, "") || item.date
                       }
@@ -1739,44 +1740,6 @@ export const Hero = () => {
                   </motion.div>
                 ))}
               </StaggerList>
-            </motion.div>
-
-            {/* Stream Part 5: Portfolio Section */}
-            <motion.div
-              initial={{ opacity: 0, y: 35 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              onViewportEnter={() => {
-                setActiveSection("portfolio");
-              }}
-              id="portfolio"
-              transition={{ duration: 0.8 }}
-              className="border-t border-white/5 pt-6 lg:pt-16 space-y-8 lg:space-y-12 pb-0 scroll-mt-24"
-            >
-              <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
-                <div>
-                  <div className="text-xs font-black uppercase tracking-[0.5em] hero-text-gradient mb-4">
-                    Sélection de réalisations
-                  </div>
-                  <h2 className="text-3xl md:text-5xl font-black uppercase tracking-normal leading-none text-white">
-                    Portfolio<span className="text-white/20">Works</span>
-                  </h2>
-                </div>
-              </div>
-
-
-              {/* Vertical image stack — interactive portfolio showcase */}
-              <VerticalImageStack
-                images={filteredProjects.slice(0, 7).map((p) => ({
-                  id: p.id,
-                  src: (p.image as unknown as string) ?? PLACEHOLDER_IMG,
-                  alt: p.title,
-                  title: p.title,
-                  category: p.category,
-                  year: p.year,
-                }))}
-              />
-
             </motion.div>
 
             {/* Univers Visuel section removed per request */}
