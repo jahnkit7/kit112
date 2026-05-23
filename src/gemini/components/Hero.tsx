@@ -1394,7 +1394,7 @@ export const Hero = () => {
               opacity: isMobile ? mobileStreamOpacity : 1,
               y: isMobile ? mobileStreamTranslateY : 0,
             }}
-            className={`flex flex-col gap-24 lg:gap-32 py-4 lg:py-6 relative z-40 w-full max-w-[500px] lg:max-w-none min-w-0 mx-auto px-8 sm:px-10 lg:pl-0 lg:pr-4 pt-[106vh] pb-32 lg:pt-2 transition-opacity duration-500 ${
+            className={`flex flex-col gap-10 lg:gap-32 py-4 lg:py-6 relative z-40 w-full max-w-[500px] lg:max-w-none min-w-0 mx-auto px-8 sm:px-10 lg:pl-0 lg:pr-4 pt-[106vh] pb-16 lg:pb-32 lg:pt-2 transition-opacity duration-500 ${
               isMobile && !isScrolled ? "pointer-events-none" : "pointer-events-auto"
             }`}
           >
@@ -1499,7 +1499,7 @@ export const Hero = () => {
                 setActiveSection("about");
               }}
               id="about"
-              className="space-y-8 border-t border-white/5 pt-16 scroll-mt-24"
+              className="space-y-8 border-t border-white/5 pt-6 lg:pt-16 scroll-mt-24"
             >
               {/* Sleek display title with elegant clip-path swipe */}
               <div className="overflow-hidden">
@@ -1670,7 +1670,7 @@ export const Hero = () => {
               }}
               id="parcours"
               transition={{ duration: 0.8 }}
-              className="border-t border-white/5 pt-16 space-y-12 scroll-mt-24"
+              className="border-t border-white/5 pt-6 lg:pt-16 space-y-8 lg:space-y-12 scroll-mt-24"
             >
               <div>
                 <BlurFade y={12} duration={0.7}>
@@ -1712,7 +1712,7 @@ export const Hero = () => {
               }}
               id="portfolio"
               transition={{ duration: 0.8 }}
-              className="border-t border-white/5 pt-16 space-y-12 pb-16 scroll-mt-24"
+              className="border-t border-white/5 pt-6 lg:pt-16 space-y-8 lg:space-y-12 pb-6 lg:pb-16 scroll-mt-24"
             >
               <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
                 <div>
@@ -1801,7 +1801,7 @@ export const Hero = () => {
               }}
               id="expertise"
               transition={{ duration: 0.8 }}
-              className="border-t border-white/5 pt-16 space-y-12 scroll-mt-24"
+              className="border-t border-white/5 pt-6 lg:pt-16 space-y-8 lg:space-y-12 scroll-mt-24"
             >
               <div className="space-y-4">
                 <MaskReveal as="div" className="max-w-2xl" duration={1.1}>
@@ -1836,7 +1836,7 @@ export const Hero = () => {
                 setActiveSection("expertise");
               }}
               transition={{ duration: 0.8 }}
-              className="border-t border-white/5 pt-16 space-y-12"
+              className="border-t border-white/5 pt-6 lg:pt-16 space-y-12"
             >
               <div className="space-y-3">
                 <h3 className="text-xl md:text-4xl font-normal text-white leading-tight tracking-normal max-w-2xl">
@@ -1881,7 +1881,7 @@ export const Hero = () => {
                 setActiveSection("expertise");
               }}
               transition={{ duration: 0.8 }}
-              className="border-t border-white/5 pt-16 space-y-12"
+              className="border-t border-white/5 pt-6 lg:pt-16 space-y-12"
             >
               <div className="space-y-4">
                 <h3 className="text-xl md:text-4xl font-normal text-white leading-tight tracking-normal max-w-2xl">
@@ -1941,7 +1941,7 @@ export const Hero = () => {
                 setActiveSection("expertise");
               }}
               transition={{ duration: 0.8 }}
-              className="border-t border-white/5 pt-16 space-y-8 lg:space-y-10"
+              className="border-t border-white/5 pt-6 lg:pt-16 space-y-8 lg:space-y-10"
             >
               <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
                 <div className="space-y-4">
@@ -2034,7 +2034,7 @@ export const Hero = () => {
                 setActiveSection("expertise");
               }}
               transition={{ duration: 0.8 }}
-              className="border-t border-white/5 pt-16 space-y-12"
+              className="border-t border-white/5 pt-6 lg:pt-16 space-y-12"
             >
               <div className="space-y-4">
                 <h3 className="text-xl md:text-4xl font-normal text-white leading-tight tracking-normal max-w-2xl">
