@@ -1501,14 +1501,6 @@ export const Hero = () => {
               id="about"
               className="space-y-8 border-t border-white/5 pt-16 scroll-mt-24"
             >
-              {/* Perfect replica of user screenshot "ABOUT" badge */}
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-zinc-900 border border-zinc-800 rounded-full w-fit">
-                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_2px_rgba(16,185,129,0.3)]" />
-                <span className="text-[9px] font-mono tracking-widest text-[#a1a1aa] uppercase font-bold">
-                  ABOUT
-                </span>
-              </div>
-
               {/* Sleek display title with elegant clip-path swipe */}
               <div className="overflow-hidden">
                 <motion.h2
@@ -1516,12 +1508,13 @@ export const Hero = () => {
                   whileInView={{ clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)" }}
                   viewport={{ once: true, margin: "-100px" }}
                   transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-                  className="text-3xl md:text-5xl font-normal text-white leading-tight tracking-tight max-w-3xl"
+                  className="text-2xl md:text-5xl font-normal text-white leading-tight tracking-tight max-w-3xl"
                 >
                   Concevoir des marques et des produits avec clarté, créativité et
                   rigeur stratégique.
                 </motion.h2>
               </div>
+
 
               {/* Extremely soft clean manifesto text */}
               <motion.p
@@ -1811,21 +1804,13 @@ export const Hero = () => {
               className="border-t border-white/5 pt-16 space-y-12 scroll-mt-24"
             >
               <div className="space-y-4">
-                <BlurFade y={10} duration={0.6}>
-                  <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-zinc-900 border border-zinc-800 rounded-full w-fit">
-                    <div className="w-1.5 h-1.5 rounded-full bg-[#00c8ff] shadow-[0_0_8px_2px_rgba(0,200,255,0.3)] anim-pulse" />
-                    <span className="text-[9px] font-mono tracking-widest text-[#a1a1aa] uppercase font-bold text-xs">
-                      TOOLS & EXPERTISE
-                    </span>
-                  </div>
-                </BlurFade>
-
                 <MaskReveal as="div" className="max-w-2xl" duration={1.1}>
-                  <h3 className="text-2xl md:text-4xl font-normal text-white leading-tight tracking-normal mt-2">
+                  <h3 className="text-xl md:text-4xl font-normal text-white leading-tight tracking-normal">
                     See how my expertise with these tools drives better results
                   </h3>
                 </MaskReveal>
               </div>
+
 
               {/* Tools row lists */}
               <div className="divide-y divide-white/5 pt-4">
@@ -1854,16 +1839,11 @@ export const Hero = () => {
               className="border-t border-white/5 pt-16 space-y-12"
             >
               <div className="space-y-3">
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-zinc-900 border border-zinc-800 rounded-full w-fit">
-                  <div className="w-1.5 h-1.5 rounded-full bg-brand-orange shadow-[0_0_8px_2px_rgba(255,75,43,0.3)] animate-pulse" />
-                  <span className="text-[9px] font-mono tracking-widest text-[#a1a1aa] uppercase font-bold text-xs">
-                    CHAMP D'ACTION
-                  </span>
-                </div>
-                <h3 className="text-2xl md:text-4xl font-normal text-white leading-tight tracking-normal max-w-2xl mt-2">
+                <h3 className="text-xl md:text-4xl font-normal text-white leading-tight tracking-normal max-w-2xl">
                   Un profil hybride à l'écoute de vos ambitions stratégiques
                 </h3>
               </div>
+
 
               {(() => {
                 const cardMeta = [
@@ -1904,17 +1884,11 @@ export const Hero = () => {
               className="border-t border-white/5 pt-16 space-y-12"
             >
               <div className="space-y-4">
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-zinc-900 border border-zinc-850 rounded-full w-fit">
-                  <div className="w-1.5 h-1.5 rounded-full bg-pink-500 shadow-[0_0_8px_2px_rgba(236,72,153,0.3)] animate-pulse" />
-                  <span className="text-[9px] font-mono tracking-widest text-[#a1a1aa] uppercase font-bold text-xs">
-                    APPROCHE & VALEURS
-                  </span>
-                </div>
-
-                <h3 className="text-2xl md:text-4xl font-normal text-white leading-tight tracking-normal max-w-2xl mt-2">
+                <h3 className="text-xl md:text-4xl font-normal text-white leading-tight tracking-normal max-w-2xl">
                   Concevoir avec clarté, rigueur et engagement opérationnel
                 </h3>
               </div>
+
 
               {/* 3D perspective fold container */}
               <div className="grid grid-cols-1 gap-6 pt-4 [perspective:1000px]">
@@ -1971,17 +1945,11 @@ export const Hero = () => {
             >
               <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
                 <div className="space-y-4">
-                  <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-zinc-900 border border-zinc-800 rounded-full w-fit">
-                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_2px_rgba(16,185,129,0.3)] animate-pulse" />
-                    <span className="text-[9px] font-mono tracking-widest text-[#a1a1aa] uppercase font-bold text-xs">
-                      RECOMMANDATIONS
-                    </span>
-                  </div>
-
-                  <h3 className="text-2xl md:text-4xl font-normal text-white leading-tight tracking-normal max-w-xl mt-2">
+                  <h3 className="text-xl md:text-4xl font-normal text-white leading-tight tracking-normal max-w-xl">
                     La voix de ceux qui font confiance à notre rigueur
                   </h3>
                 </div>
+
 
                 {/* Client selector tabs - Compact & Sleek */}
                 <div className="flex flex-wrap gap-2">
@@ -2069,17 +2037,11 @@ export const Hero = () => {
               className="border-t border-white/5 pt-16 space-y-12"
             >
               <div className="space-y-4">
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-zinc-900 border border-zinc-800 rounded-full w-fit">
-                  <div className="w-1.5 h-1.5 rounded-full bg-violet-500 shadow-[0_0_8px_2px_rgba(139,92,246,0.3)] animate-pulse" />
-                  <span className="text-[9px] font-mono tracking-widest text-[#a1a1aa] uppercase font-bold text-xs">
-                    MESURES D'IMPACT
-                  </span>
-                </div>
-
-                <h3 className="text-2xl md:text-4xl font-normal text-white leading-tight tracking-normal max-w-2xl mt-2">
+                <h3 className="text-xl md:text-4xl font-normal text-white leading-tight tracking-normal max-w-2xl">
                   Une trajectoire d'excellence dictée par des livrables concrets
                 </h3>
               </div>
+
 
               <div className="grid grid-cols-2 gap-4 sm:gap-6 pt-4">
                 {statistics.map((stat, idx) => (
