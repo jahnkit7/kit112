@@ -20,7 +20,6 @@ interface VerticalImageStackProps {
 
 export function VerticalImageStack({ images, className = "" }: VerticalImageStackProps) {
   const wrapperRef = useRef<HTMLDivElement | null>(null);
-  const [mobileStart, setMobileStart] = useState(0);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -28,7 +27,6 @@ export function VerticalImageStack({ images, className = "" }: VerticalImageStac
     const query = window.matchMedia("(max-width: 640px)");
     const update = () => {
       setIsMobile(query.matches);
-      if (wrapperRef.current) setMobileStart(wrapperRef.current.offsetTop);
     };
     update();
     window.addEventListener("resize", update);
@@ -41,14 +39,13 @@ export function VerticalImageStack({ images, className = "" }: VerticalImageStac
 
   // Tall outer wrapper drives scroll-pinned card flipping.
   // Each image gets ~80vh of scroll distance; sticky inner holds the stack at center.
-  const scrollStep = isMobile ? 54 : 80;
+  const scrollStep = isMobile ? 82 : 80;
   const sectionHeight = `${Math.max(images.length, 1) * scrollStep + (isMobile ? 20 : 40)}vh`;
 
   const { scrollYProgress } = useScroll({
     target: wrapperRef,
     offset: ["start start", "end end"],
   });
-  const { scrollY } = useScroll();
 
   // Map scroll progress (0..1) to image index, with some padding at start/end
   const indexMV = useTransform(scrollYProgress, (p) => {
@@ -64,25 +61,16 @@ export function VerticalImageStack({ images, className = "" }: VerticalImageStac
     setCurrentIndex((prev) => (prev === i ? prev : i));
   });
 
-  // Quantized pin position on mobile — moves in discrete steps per card,
-  // avoiding a setState/transform churn on every scroll frame.
-  const mobilePinY = useTransform(scrollY, (v) => {
-    if (!isMobile || !wrapperRef.current || images.length === 0) return 0;
-    const total = Math.max(0, wrapperRef.current.offsetHeight - window.innerHeight * 0.92);
-    const raw = Math.min(Math.max((v as number) - mobileStart, 0), total);
-    // Snap to ~4px increments to reduce layout work
-    return Math.round(raw / 4) * 4;
-  });
-
   const scrollToIndex = (i: number) => {
     const el = wrapperRef.current;
     if (!el) return;
     const n = images.length;
     if (n === 0) return;
     if (isMobile) {
-      const total = Math.max(1, el.offsetHeight - window.innerHeight * 0.92);
+      const sectionTop = window.scrollY + el.getBoundingClientRect().top;
+      const total = Math.max(1, el.offsetHeight - window.innerHeight);
       const targetP = (i + 0.5) / n;
-      window.scrollTo({ top: mobileStart + targetP * total, behavior: "smooth" });
+      window.scrollTo({ top: sectionTop + targetP * total, behavior: "smooth" });
       return;
     }
     const rect = el.getBoundingClientRect();
@@ -112,7 +100,7 @@ export function VerticalImageStack({ images, className = "" }: VerticalImageStac
     <div ref={wrapperRef} className={`relative w-full touch-pan-y ${className}`} style={{ height: sectionHeight }}>
       <motion.div
         className="sticky top-0 h-[100svh] w-full flex items-center justify-center overflow-hidden select-none pointer-events-none sm:pointer-events-auto touch-pan-y"
-        style={{ perspective: "1200px", y: isMobile ? mobilePinY : 0, position: isMobile ? "relative" : "sticky" }}
+        style={{ perspective: "1200px" }}
       >
         {/* Ambient glow */}
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
