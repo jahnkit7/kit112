@@ -1712,7 +1712,7 @@ export const Hero = () => {
               }}
               id="portfolio"
               transition={{ duration: 0.8 }}
-              className="border-t border-white/5 pt-6 lg:pt-16 space-y-8 lg:space-y-12 pb-6 lg:pb-16 scroll-mt-24"
+              className="border-t border-white/5 pt-6 lg:pt-16 space-y-8 lg:space-y-12 pb-0 scroll-mt-24"
             >
               <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
                 <div>
@@ -1723,56 +1723,8 @@ export const Hero = () => {
                     Portfolio<span className="text-white/20">Works</span>
                   </h2>
                 </div>
-
-                <div className="flex flex-wrap items-center gap-3">
-                  {/* Filter buttons */}
-                  <div className="flex flex-wrap gap-1.5">
-                    {[
-                      "Tous",
-                      "Branding",
-                      "Mobile App",
-                      "UI Design",
-                      "Strategy",
-                    ].map((filter) => (
-                      <button
-                        key={filter}
-                        onClick={() => setActiveFilter(filter)}
-                        className={`text-[9px] font-black uppercase tracking-widest px-3.5 py-2 rounded-xl border transition-all duration-300 relative ${
-                          activeFilter === filter
-                            ? "bg-brand-orange text-white border-brand-orange/20 shadow-lg shadow-brand-orange/20 scale-102 font-bold"
-                            : "bg-zinc-900/60 text-zinc-400 border-white/5 hover:text-white hover:border-white/10"
-                        }`}
-                      >
-                        {filter}
-                      </button>
-                    ))}
-                  </div>
-
-                  {/* Format layout toggle */}
-                  <div className="flex bg-zinc-950 p-1 border border-white/5 rounded-xl shrink-0 font-mono">
-                    <button
-                      onClick={() => setPortfolioLayout("grid")}
-                      className={`text-[8px] font-black uppercase tracking-wider px-2.5 py-1.5 rounded-lg transition-all ${
-                        portfolioLayout === "grid"
-                          ? "bg-zinc-800 text-white"
-                          : "text-zinc-500 hover:text-zinc-300"
-                      }`}
-                    >
-                      Mosaïque
-                    </button>
-                    <button
-                      onClick={() => setPortfolioLayout("cinematic")}
-                      className={`text-[8px] font-black uppercase tracking-wider px-2.5 py-1.5 rounded-lg transition-all ${
-                        portfolioLayout === "cinematic"
-                          ? "bg-zinc-800 text-white animate-pulse"
-                          : "text-zinc-500 hover:text-zinc-300"
-                      }`}
-                    >
-                      Cinématique
-                    </button>
-                  </div>
-                </div>
               </div>
+
 
               {/* Vertical image stack — interactive portfolio showcase */}
               <VerticalImageStack
