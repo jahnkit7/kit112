@@ -4,8 +4,6 @@ import {
   useScroll,
   useTransform,
   AnimatePresence,
-  useMotionTemplate,
-  useReducedMotion,
   type Variants,
 } from "motion/react";
 import {
@@ -128,7 +126,7 @@ const ParcoursItem = ({
     title: `${title.split("·").pop()?.trim() || "Projet"} ${String(i + 1).padStart(2, "0")}`,
     description,
     meta: year,
-    imageSrc: projects[(index * 2 + i) % projects.length].image,
+    imageSrc: PLACEHOLDER_IMG,
     gradient: PLACEHOLDER_GRADIENTS[(index + i) % PLACEHOLDER_GRADIENTS.length],
   }));
 
@@ -198,10 +196,10 @@ const ParcoursItem = ({
                   {railItems.map((item, i) => (
                     <div
                       key={i}
-                      className="aspect-square overflow-hidden rounded-xl border border-white/5 bg-zinc-900"
-                    >
-                      <img src={item.imageSrc} alt="" className="h-full w-full object-cover" loading="lazy" />
-                    </div>
+                      className="aspect-square rounded-xl border border-white/5 bg-zinc-900"
+                      style={{ background: item.gradient }}
+                      aria-label={item.title}
+                    />
                   ))}
                 </div>
               </div>
