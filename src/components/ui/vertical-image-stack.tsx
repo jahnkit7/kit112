@@ -116,7 +116,10 @@ export function VerticalImageStack({ images, className = "" }: VerticalImageStac
 
   return (
     <div ref={wrapperRef} className={`relative w-full touch-pan-y ${className}`} style={{ height: sectionHeight }}>
-      <div className="sticky top-0 h-[100svh] w-full flex items-center justify-center overflow-hidden select-none touch-pan-y" style={{ perspective: "1200px" }}>
+      <motion.div
+        className="sticky top-0 h-[100svh] w-full flex items-center justify-center overflow-hidden select-none pointer-events-none sm:pointer-events-auto touch-pan-y"
+        style={{ perspective: "1200px", y: isMobile ? mobilePinY : 0, position: isMobile ? "relative" : "sticky" }}
+      >
         {/* Ambient glow */}
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
           <div className="w-[60%] h-[60%] rounded-full bg-brand-orange/10 blur-[120px]" />
@@ -173,7 +176,7 @@ export function VerticalImageStack({ images, className = "" }: VerticalImageStac
         </div>
 
         {/* Navigation dots */}
-        <div className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 flex flex-col items-center gap-2 z-10">
+        <div className="absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 flex flex-col items-center gap-2 z-10 pointer-events-auto">
           {images.map((_, index) => (
             <button
               key={index}
@@ -205,18 +208,18 @@ export function VerticalImageStack({ images, className = "" }: VerticalImageStac
         <button
           onClick={() => scrollToIndex(Math.max(0, currentIndex - 1))}
           aria-label="Previous"
-          className="absolute left-4 sm:left-6 top-1/2 -translate-y-8 w-9 h-9 rounded-full bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 hover:text-white flex items-center justify-center z-10"
+          className="absolute left-3 sm:left-6 top-1/2 -translate-y-8 w-9 h-9 rounded-full bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 hover:text-white flex items-center justify-center z-10 pointer-events-auto"
         >
           <ChevronUp size={16} />
         </button>
         <button
           onClick={() => scrollToIndex(Math.min(images.length - 1, currentIndex + 1))}
           aria-label="Next"
-          className="absolute left-4 sm:left-6 top-1/2 translate-y-0 w-9 h-9 rounded-full bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 hover:text-white flex items-center justify-center z-10"
+          className="absolute left-3 sm:left-6 top-1/2 translate-y-0 w-9 h-9 rounded-full bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 hover:text-white flex items-center justify-center z-10 pointer-events-auto"
         >
           <ChevronDown size={16} />
         </button>
-      </div>
+      </motion.div>
     </div>
   );
 }
