@@ -20,28 +20,45 @@ interface VerticalImageStackProps {
 
 export function VerticalImageStack({ images, className = "" }: VerticalImageStackProps) {
   const wrapperRef = useRef<HTMLDivElement | null>(null);
+  const indexRef = useRef(0);
   const [mobileStart, setMobileStart] = useState(0);
+  const [mobileTravel, setMobileTravel] = useState(1);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const query = window.matchMedia("(max-width: 640px)");
+    let frame = 0;
     const update = () => {
       setIsMobile(query.matches);
-      if (wrapperRef.current) setMobileStart(wrapperRef.current.offsetTop);
+      if (wrapperRef.current) {
+        const phoneViewport = window.innerHeight * 0.92;
+        setMobileStart(wrapperRef.current.offsetTop);
+        setMobileTravel(Math.max(1, wrapperRef.current.offsetHeight - phoneViewport));
+      }
+    };
+    const scheduleUpdate = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(update);
     };
     update();
-    window.addEventListener("resize", update);
-    query.addEventListener("change", update);
+    scheduleUpdate();
+    const observed = wrapperRef.current?.parentElement;
+    const resizeObserver = observed ? new ResizeObserver(scheduleUpdate) : null;
+    if (observed) resizeObserver?.observe(observed);
+    window.addEventListener("resize", scheduleUpdate);
+    query.addEventListener("change", scheduleUpdate);
     return () => {
-      window.removeEventListener("resize", update);
-      query.removeEventListener("change", update);
+      cancelAnimationFrame(frame);
+      resizeObserver?.disconnect();
+      window.removeEventListener("resize", scheduleUpdate);
+      query.removeEventListener("change", scheduleUpdate);
     };
-  }, []);
+  }, [images.length]);
 
   // Tall outer wrapper drives scroll-pinned card flipping.
   // Each image gets ~80vh of scroll distance; sticky inner holds the stack at center.
-  const scrollStep = isMobile ? 54 : 80;
+  const scrollStep = isMobile ? 82 : 80;
   const sectionHeight = `${Math.max(images.length, 1) * scrollStep + (isMobile ? 20 : 40)}vh`;
 
   const { scrollYProgress } = useScroll({
@@ -60,18 +77,29 @@ export function VerticalImageStack({ images, className = "" }: VerticalImageStac
   });
 
   useMotionValueEvent(indexMV, "change", (v) => {
+    if (isMobile) return;
     const i = Math.round(v as number);
-    setCurrentIndex((prev) => (prev === i ? prev : i));
+    if (indexRef.current !== i) {
+      indexRef.current = i;
+      setCurrentIndex(i);
+    }
   });
 
-  // Quantized pin position on mobile — moves in discrete steps per card,
-  // avoiding a setState/transform churn on every scroll frame.
+  useMotionValueEvent(scrollY, "change", (v) => {
+    if (!isMobile || images.length === 0) return;
+    const rawProgress = ((v as number) - mobileStart) / mobileTravel;
+    const progress = Math.min(1, Math.max(0, rawProgress));
+    const adj = Math.min(1, Math.max(0, (progress - 0.05) / 0.9));
+    const i = Math.min(images.length - 1, Math.max(0, Math.round(adj * (images.length - 1))));
+    if (indexRef.current !== i) {
+      indexRef.current = i;
+      setCurrentIndex(i);
+    }
+  });
+
   const mobilePinY = useTransform(scrollY, (v) => {
-    if (!isMobile || !wrapperRef.current || images.length === 0) return 0;
-    const total = Math.max(0, wrapperRef.current.offsetHeight - window.innerHeight * 0.92);
-    const raw = Math.min(Math.max((v as number) - mobileStart, 0), total);
-    // Snap to ~4px increments to reduce layout work
-    return Math.round(raw / 4) * 4;
+    if (!isMobile) return 0;
+    return Math.min(Math.max((v as number) - mobileStart, 0), mobileTravel);
   });
 
   const scrollToIndex = (i: number) => {
@@ -80,9 +108,10 @@ export function VerticalImageStack({ images, className = "" }: VerticalImageStac
     const n = images.length;
     if (n === 0) return;
     if (isMobile) {
+      const sectionTop = window.scrollY + el.getBoundingClientRect().top;
       const total = Math.max(1, el.offsetHeight - window.innerHeight * 0.92);
-      const targetP = (i + 0.5) / n;
-      window.scrollTo({ top: mobileStart + targetP * total, behavior: "smooth" });
+      const targetP = n === 1 ? 0 : 0.05 + (i / (n - 1)) * 0.9;
+      window.scrollTo({ top: sectionTop + targetP * total, behavior: "smooth" });
       return;
     }
     const rect = el.getBoundingClientRect();
