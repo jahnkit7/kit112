@@ -68,6 +68,7 @@ import { VerticalImageStack } from "@/components/ui/vertical-image-stack";
 import { ScrollTiltedGrid } from "@/components/ui/scroll-tilted-grid";
 import { Scroller } from "@/components/ui/scroller-1";
 import ImmersiveScrollGallery from "@/components/ui/immersive-scroll-gallery";
+import { FocusRail, type FocusRailItem } from "@/components/ui/focus-rail";
 
 import { ContainerScroll, CardsContainer, CardTransformed } from "@/components/ui/animated-cards-stack";
 import mjkLogo from "@/assets/mjk-logo.svg";
@@ -82,6 +83,21 @@ const PLACEHOLDER_GRADIENTS = [
   "linear-gradient(135deg,#1b3a2a 0%,#2d5a3d 50%,#5a8a5c 100%)",
   "linear-gradient(135deg,#3d2b1f 0%,#6b3a2a 50%,#cd7f32 100%)",
 ];
+
+const PARCOURS_REVEAL = {
+  hidden: { opacity: 0, y: 56, filter: "blur(14px)" },
+  show: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: { duration: 0.95, ease: [0.16, 1, 0.3, 1] },
+  },
+};
+
+const PARCOURS_CHILD_REVEAL = {
+  hidden: { opacity: 0, y: 24 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } },
+};
 
 // Inline SVG placeholder kept for legacy modal grids (zero network cost).
 const PLACEHOLDER_IMG =
