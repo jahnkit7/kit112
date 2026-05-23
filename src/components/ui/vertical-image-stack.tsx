@@ -20,15 +20,23 @@ interface VerticalImageStackProps {
 
 export function VerticalImageStack({ images, className = "" }: VerticalImageStackProps) {
   const wrapperRef = useRef<HTMLDivElement | null>(null);
+  const [mobileStart, setMobileStart] = useState(0);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const query = window.matchMedia("(max-width: 640px)");
-    const update = () => setIsMobile(query.matches);
+    const update = () => {
+      setIsMobile(query.matches);
+      if (wrapperRef.current) setMobileStart(wrapperRef.current.offsetTop);
+    };
     update();
+    window.addEventListener("resize", update);
     query.addEventListener("change", update);
-    return () => query.removeEventListener("change", update);
+    return () => {
+      window.removeEventListener("resize", update);
+      query.removeEventListener("change", update);
+    };
   }, []);
 
   // Tall outer wrapper drives scroll-pinned card flipping.
@@ -40,6 +48,7 @@ export function VerticalImageStack({ images, className = "" }: VerticalImageStac
     target: wrapperRef,
     offset: ["start start", "end end"],
   });
+  const { scrollY } = useScroll();
 
   // Map scroll progress (0..1) to image index, with some padding at start/end
   const indexMV = useTransform(scrollYProgress, (p) => {
@@ -51,14 +60,36 @@ export function VerticalImageStack({ images, className = "" }: VerticalImageStac
   });
 
   useMotionValueEvent(indexMV, "change", (v) => {
+    if (isMobile) return;
     const i = Math.round(v as number);
     setCurrentIndex((prev) => (prev === i ? prev : i));
+  });
+
+  useMotionValueEvent(scrollY, "change", (v) => {
+    if (!isMobile || images.length === 0 || !wrapperRef.current) return;
+    const total = Math.max(1, wrapperRef.current.offsetHeight - window.innerHeight * 0.92);
+    const progress = Math.min(1, Math.max(0, ((v as number) - mobileStart) / total));
+    const nextIndex = Math.min(images.length - 1, Math.floor(progress * images.length));
+    setCurrentIndex((prev) => (prev === nextIndex ? prev : nextIndex));
+  });
+
+  const mobilePinY = useTransform(scrollY, (v) => {
+    if (!isMobile || !wrapperRef.current) return 0;
+    const total = Math.max(0, wrapperRef.current.offsetHeight - window.innerHeight * 0.92);
+    return Math.min(Math.max((v as number) - mobileStart, 0), total);
   });
 
   const scrollToIndex = (i: number) => {
     const el = wrapperRef.current;
     if (!el) return;
     const n = images.length;
+    if (n === 0) return;
+    if (isMobile) {
+      const total = Math.max(1, el.offsetHeight - window.innerHeight * 0.92);
+      const targetP = (i + 0.5) / n;
+      window.scrollTo({ top: mobileStart + targetP * total, behavior: "smooth" });
+      return;
+    }
     const rect = el.getBoundingClientRect();
     const total = el.offsetHeight - window.innerHeight;
     // target progress for index i = 0.05 + (i + 0.5) / n * 0.9
