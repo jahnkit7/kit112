@@ -6,7 +6,7 @@ export const Navbar = () => {
     { icon: <Home size={20} />, href: "#", label: "Home" },
     { icon: <User size={20} />, href: "#about", label: "Vision" },
     { icon: <Target size={20} />, href: "#expertise", label: "Expertise" },
-    { icon: <Briefcase size={20} />, href: "#portfolio", label: "Projets" },
+    { icon: <Briefcase size={20} />, href: "#parcours", label: "Projets" },
     { icon: <Mail size={20} />, href: "#contact", label: "Contact" },
   ];
 
