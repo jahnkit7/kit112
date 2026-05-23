@@ -1945,17 +1945,11 @@ export const Hero = () => {
             >
               <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
                 <div className="space-y-4">
-                  <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-zinc-900 border border-zinc-800 rounded-full w-fit">
-                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_2px_rgba(16,185,129,0.3)] animate-pulse" />
-                    <span className="text-[9px] font-mono tracking-widest text-[#a1a1aa] uppercase font-bold text-xs">
-                      RECOMMANDATIONS
-                    </span>
-                  </div>
-
-                  <h3 className="text-2xl md:text-4xl font-normal text-white leading-tight tracking-normal max-w-xl mt-2">
+                  <h3 className="text-xl md:text-4xl font-normal text-white leading-tight tracking-normal max-w-xl">
                     La voix de ceux qui font confiance à notre rigueur
                   </h3>
                 </div>
+
 
                 {/* Client selector tabs - Compact & Sleek */}
                 <div className="flex flex-wrap gap-2">
