@@ -72,17 +72,23 @@ import ImmersiveScrollGallery from "@/components/ui/immersive-scroll-gallery";
 import { ContainerScroll, CardsContainer, CardTransformed } from "@/components/ui/animated-cards-stack";
 import mjkLogo from "@/assets/mjk-logo.svg";
 
-// Lightweight inline placeholder used to skip loading heavy portfolio assets
-// while we debug performance. Replace these usages with real images later.
-const PLACEHOLDER_IMG =
-  "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 3'><rect width='4' height='3' fill='%23222'/><text x='2' y='1.7' font-family='monospace' font-size='0.35' fill='%23666' text-anchor='middle'>placeholder</text></svg>";
+// Lightweight gradient placeholders — zero network, GPU friendly.
+// We rotate through a small palette so each parcours feels distinct.
+const PLACEHOLDER_GRADIENTS = [
+  "linear-gradient(135deg,#3a1f1f 0%,#7a2e1f 50%,#c44a2a 100%)",
+  "linear-gradient(135deg,#0f2027 0%,#203a43 50%,#2c5364 100%)",
+  "linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%)",
+  "linear-gradient(135deg,#2d1b3d 0%,#5b2a86 50%,#a16ae8 100%)",
+  "linear-gradient(135deg,#1b3a2a 0%,#2d5a3d 50%,#5a8a5c 100%)",
+  "linear-gradient(135deg,#3d2b1f 0%,#6b3a2a 50%,#cd7f32 100%)",
+];
 
 interface ParcoursItemProps {
   title: string;
   subtitle: string;
   description: string;
   year: string;
-  key?: string | number;
+  index: number;
 }
 
 const ParcoursItem = ({
@@ -90,75 +96,104 @@ const ParcoursItem = ({
   subtitle,
   description,
   year,
+  index,
 }: ParcoursItemProps) => {
-  const ref = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"],
-  });
+  const [expanded, setExpanded] = useState(false);
 
-  // Soft progress linked text highlight and opacity fade
-  const opacity = useTransform(
-    scrollYProgress,
-    [0, 0.45, 0.55, 1],
-    [0.2, 1, 1, 0.2],
+  // Deterministic placeholder set per parcours
+  const heroGradient = PLACEHOLDER_GRADIENTS[index % PLACEHOLDER_GRADIENTS.length];
+  const gridGradients = Array.from({ length: 6 }, (_, i) =>
+    PLACEHOLDER_GRADIENTS[(index + i + 1) % PLACEHOLDER_GRADIENTS.length],
   );
-  const y = useTransform(scrollYProgress, [0, 0.45, 0.55, 1], [30, 0, 0, -30]);
 
-  const color = useTransform(
-    scrollYProgress,
-    [0.35, 0.45, 0.55, 0.65],
-    [
-      "rgba(255,255,255,0.15)",
-      "rgba(255,255,255,1)",
-      "rgba(255,255,255,1)",
-      "rgba(255,255,255,0.15)",
-    ],
-  );
+  const titleParts = title.split("·");
 
   return (
     <motion.div
-      ref={ref}
-      style={{ opacity, y }}
-      className="py-10 md:py-16 grid grid-cols-1 md:grid-cols-12 gap-6 items-start"
+      layout
+      transition={{ layout: { duration: 0.45, ease: [0.16, 1, 0.3, 1] } }}
+      className="py-8 md:py-14 grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8 items-start"
     >
       <div className="md:col-span-3">
-        <motion.span
-          style={{ color }}
-          className="text-xl md:text-2xl font-black font-sans tracking-tight"
-        >
+        <span className="text-xl md:text-2xl font-black font-sans tracking-tight text-white">
           {year}
-        </motion.span>
+        </span>
       </div>
 
-      <div className="md:col-span-9">
-        <div className="space-y-4">
-          <motion.div
-            style={{ color }}
-            className="text-xs md:text-sm font-bold tracking-tight opacity-50 uppercase"
-          >
+      <div className="md:col-span-9 space-y-5">
+        <div className="space-y-3">
+          <div className="text-[10px] md:text-xs font-bold tracking-[0.3em] text-white/40 uppercase">
             {subtitle}
-          </motion.div>
-          <motion.h3
-            style={{ color }}
-            className="text-2xl md:text-4xl font-black leading-[1.15] tracking-tighter"
-          >
-            {title.split("·").map((part, i) => (
-              <span
-                key={i}
-                className={i === 1 ? "text-white/20 block md:inline" : ""}
-              >
+          </div>
+          <h3 className="text-xl md:text-3xl font-black leading-[1.15] tracking-tight text-white">
+            {titleParts.map((part, i) => (
+              <span key={i} className={i === 1 ? "text-white/30 block md:inline" : ""}>
                 {i === 1 ? ` for ${part.trim()}` : part.trim()}
               </span>
             ))}
-          </motion.h3>
-          <motion.p
-            style={{ color }}
-            className="text-sm md:text-base font-light max-w-2xl leading-relaxed opacity-50 pt-2"
-          >
+          </h3>
+          <p className="text-sm md:text-base font-light max-w-2xl leading-relaxed text-white/50">
             {description}
-          </motion.p>
+          </p>
         </div>
+
+        {/* Portfolio preview attached to this parcours */}
+        <motion.button
+          type="button"
+          onClick={() => setExpanded((v) => !v)}
+          layout
+          className="group relative w-full overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] text-left focus:outline-none focus:ring-2 focus:ring-white/30"
+          whileTap={{ scale: 0.99 }}
+        >
+          <div
+            className="relative w-full aspect-[16/9] md:aspect-[21/9]"
+            style={{ background: heroGradient }}
+          >
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+            <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between gap-3">
+              <span className="text-[10px] md:text-xs font-bold tracking-[0.25em] uppercase text-white/80">
+                {expanded ? "Réduire" : "Voir le projet"}
+              </span>
+              <motion.span
+                animate={{ rotate: expanded ? 180 : 0 }}
+                transition={{ duration: 0.3 }}
+                className="w-7 h-7 rounded-full bg-white/15 backdrop-blur-sm flex items-center justify-center text-white"
+              >
+                <ChevronDown size={14} />
+              </motion.span>
+            </div>
+          </div>
+        </motion.button>
+
+        <AnimatePresence initial={false}>
+          {expanded && (
+            <motion.div
+              key="content"
+              layout
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+              className="overflow-hidden"
+            >
+              <div className="pt-5 space-y-5">
+                <p className="text-sm md:text-base text-white/70 leading-relaxed max-w-2xl">
+                  {description} Plus de détails, captures et explorations
+                  visuelles à venir pour ce projet.
+                </p>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-3">
+                  {gridGradients.map((g, i) => (
+                    <div
+                      key={i}
+                      className="aspect-square rounded-xl border border-white/5"
+                      style={{ background: g }}
+                    />
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </motion.div>
   );
