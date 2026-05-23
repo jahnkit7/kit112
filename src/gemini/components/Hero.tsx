@@ -4,8 +4,6 @@ import {
   useScroll,
   useTransform,
   AnimatePresence,
-  useMotionTemplate,
-  useReducedMotion,
   type Variants,
 } from "motion/react";
 import {
@@ -128,7 +126,7 @@ const ParcoursItem = ({
     title: `${title.split("·").pop()?.trim() || "Projet"} ${String(i + 1).padStart(2, "0")}`,
     description,
     meta: year,
-    imageSrc: projects[(index * 2 + i) % projects.length].image,
+    imageSrc: PLACEHOLDER_IMG,
     gradient: PLACEHOLDER_GRADIENTS[(index + i) % PLACEHOLDER_GRADIENTS.length],
   }));
 
@@ -198,10 +196,10 @@ const ParcoursItem = ({
                   {railItems.map((item, i) => (
                     <div
                       key={i}
-                      className="aspect-square overflow-hidden rounded-xl border border-white/5 bg-zinc-900"
-                    >
-                      <img src={item.imageSrc} alt="" className="h-full w-full object-cover" loading="lazy" />
-                    </div>
+                      className="aspect-square rounded-xl border border-white/5 bg-zinc-900"
+                      style={{ background: item.gradient }}
+                      aria-label={item.title}
+                    />
                   ))}
                 </div>
               </div>
@@ -223,37 +221,16 @@ interface ExpertiseCardProps {
 }
 
 const ExpertiseCard = ({ item, index, meta }: ExpertiseCardProps) => {
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"],
-  });
-
-  const reduceMotion = useReducedMotion();
-  const isMobileCard = typeof window !== "undefined" && window.matchMedia("(max-width: 1023px)").matches;
-  const direction = index % 2 === 0 ? -1 : 1;
   const Icon = meta.icon;
 
-  const shellY = useTransform(scrollYProgress, [0, 0.5, 1], ["100%", "0%", "-100%"]);
-  const shellZ = useTransform(scrollYProgress, [0, 0.5, 1], [300, 0, 300]);
-  const shellRotateX = useTransform(scrollYProgress, [0, 0.5, 1], [55, 0, -55]);
-  const shellX = useTransform(scrollYProgress, [0, 0.5, 1], [`${direction * 40}%`, "0%", `${direction * 40}%`]);
-  const shellRotate = useTransform(scrollYProgress, [0, 0.5, 1], [-direction * 5, 0, direction * 5]);
-  const shellSkewX = useTransform(scrollYProgress, [0, 0.5, 1], [direction * 20, 0, -direction * 20]);
-  const shellScaleY = useTransform(scrollYProgress, [0, 0.5, 1], [1.08, 1, 1.08]);
-  const shellBorder = useTransform(scrollYProgress, [0, 0.5, 1], [0.08, 0.16, 0.08]);
-  const shellShadow = useTransform(scrollYProgress, [0, 0.5, 1], [0.22, 0.34, 0.22]);
-  const cardFilter = useMotionTemplate`drop-shadow(0 24px 60px rgba(0,0,0,${shellShadow}))`;
-  const borderColor = useMotionTemplate`rgba(255,255,255,${shellBorder})`;
-
   const cardShell = (
-    <motion.div
+    <div
       className="absolute inset-0 overflow-hidden rounded-[1.75rem] border bg-gradient-to-b from-zinc-950 via-black to-black"
-      style={{ borderColor }}
+      style={{ borderColor: "rgba(255,255,255,0.1)" }}
     >
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/30 via-black/32 to-black/70" />
       <div
-        className="pointer-events-none absolute inset-0 opacity-[0.08] transition-opacity duration-700 group-hover:opacity-[0.14]"
+        className="pointer-events-none absolute inset-0 opacity-[0.08]"
         style={{
           backgroundImage:
             "linear-gradient(to right, rgba(255,255,255,0.4) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.4) 1px, transparent 1px)",
@@ -263,11 +240,11 @@ const ExpertiseCard = ({ item, index, meta }: ExpertiseCardProps) => {
         }}
       />
       <div
-        className="pointer-events-none absolute -bottom-24 -right-16 h-64 w-64 rounded-full blur-3xl opacity-40 transition-opacity duration-700 group-hover:opacity-60"
-        style={{ background: `radial-gradient(circle, ${meta.accent} 0%, transparent 70%)` }}
+        className="pointer-events-none absolute -bottom-16 -right-12 h-48 w-48 rounded-full opacity-25"
+        style={{ background: meta.accent }}
       />
       <span
-        className="pointer-events-none absolute -top-6 -right-2 select-none font-display text-[8rem] font-black leading-none tracking-tighter text-white/[0.06] transition-colors duration-700 group-hover:text-white/[0.1]"
+        className="pointer-events-none absolute -top-6 -right-2 select-none font-display text-[8rem] font-black leading-none tracking-tighter text-white/[0.06]"
         aria-hidden
       >
         {item.id}
@@ -276,7 +253,7 @@ const ExpertiseCard = ({ item, index, meta }: ExpertiseCardProps) => {
         className="pointer-events-none absolute inset-x-6 bottom-0 h-px opacity-0 transition-opacity duration-500 group-hover:opacity-100"
         style={{ background: `linear-gradient(to right, transparent, ${meta.accent}, transparent)` }}
       />
-    </motion.div>
+    </div>
   );
 
   const cardContent = (
@@ -284,10 +261,10 @@ const ExpertiseCard = ({ item, index, meta }: ExpertiseCardProps) => {
       <div className="mb-10 flex items-start justify-between">
         <div className="relative">
           <div
-            className="absolute inset-0 rounded-2xl blur-xl opacity-50 transition-opacity duration-500 group-hover:opacity-90"
+            className="absolute inset-0 rounded-2xl opacity-25"
             style={{ background: meta.accent }}
           />
-          <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-black/35 backdrop-blur-md transition-transform duration-500 group-hover:-rotate-6 group-hover:scale-110">
+          <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-black/45">
             <Icon className="h-5 w-5 text-white" strokeWidth={1.5} />
           </div>
         </div>
@@ -307,29 +284,10 @@ const ExpertiseCard = ({ item, index, meta }: ExpertiseCardProps) => {
     </div>
   );
 
-  if (reduceMotion) {
-    return (
-      <article ref={ref} className="group relative h-full min-h-[320px]">
-        {cardShell}
-        {cardContent}
-      </article>
-    );
-  }
-
   return (
-    <article ref={ref} style={{ perspective: "900px" }} className="group relative h-full min-h-[320px]">
-      <motion.div
-        style={{ y: shellY, z: shellZ, rotateX: shellRotateX, transformStyle: "preserve-3d" }}
-        className="absolute inset-0"
-      >
-        <motion.div
-          style={{ x: shellX, rotate: shellRotate, skewX: shellSkewX, scaleY: shellScaleY, filter: cardFilter }}
-          className="relative h-full will-change-transform"
-        >
-          {cardShell}
-          {cardContent}
-        </motion.div>
-      </motion.div>
+    <article className="group relative h-full min-h-[320px]">
+      {cardShell}
+      {cardContent}
     </article>
   );
 };
@@ -476,7 +434,7 @@ const testimonialsData = [
       "La structuration de nos processus opérationnels par Marie a radicalement changé notre efficacité sur le terrain. Une expertise rare.",
     author: "Sophie M.",
     role: "Direction Opérationnelle",
-    avatar: "/assets/images/portfolio_1_1779296273783.png",
+    avatar: PLACEHOLDER_IMG,
     logo: "PROJET ODAXIA",
   },
   {
@@ -485,7 +443,7 @@ const testimonialsData = [
       "GoteaT est la preuve vivante qu'un concept bien designé et rigoureusement exécuté peut s'imposer sur le marché dakarois.",
     author: "Amadou B.",
     role: "Partenaire Stratégique",
-    avatar: "/assets/images/portfolio_2_1779296292371.png",
+    avatar: PLACEHOLDER_IMG,
     logo: "GOTEAT",
   },
   {
@@ -503,7 +461,7 @@ const testimonialsData = [
       "Sa méthode nous a donné une direction lisible, des priorités nettes et une exécution beaucoup plus fluide dès les premières semaines.",
     author: "Aïcha N.",
     role: "Fondatrice Retail",
-    avatar: "/assets/images/portfolio_1_1779296273783.png",
+    avatar: PLACEHOLDER_IMG,
     logo: "BRAND OPS",
   },
   {
@@ -512,7 +470,7 @@ const testimonialsData = [
       "Marie a transformé une idée dispersée en expérience cohérente, désirable et prête à être lancée sans perdre notre exigence business.",
     author: "Karim S.",
     role: "CEO Studio Digital",
-    avatar: "/assets/images/portfolio_2_1779296292371.png",
+    avatar: PLACEHOLDER_IMG,
     logo: "LAUNCH STUDIO",
   },
 ];
@@ -1236,7 +1194,7 @@ export const Hero = () => {
                     {[Facebook, Twitter, Youtube, Linkedin].map((Icon, idx) => (
                       <button
                         key={idx}
-                        className="w-5 h-5 rounded-full bg-zinc-950/70 backdrop-blur-md border border-white/10 flex items-center justify-center text-zinc-300 hover:text-white hover:bg-brand-orange hover:border-brand-orange/20 hover:scale-105 transition-all duration-300 pointer-events-auto"
+                        className="w-5 h-5 rounded-full bg-zinc-950/90 border border-white/10 flex items-center justify-center text-zinc-300 hover:text-white hover:bg-brand-orange hover:border-brand-orange/20 hover:scale-105 transition-all duration-300 pointer-events-auto"
                       >
                         <Icon size={10} />
                       </button>
@@ -1360,7 +1318,7 @@ export const Hero = () => {
                           <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-ping shrink-0" />
                           PROJET DÉVERROUILLÉ
                         </span>
-                        <span className="text-[9.5px] font-bold font-mono tracking-widest uppercase text-white/50 bg-black/40 border border-white/5 px-2.5 py-0.5 rounded-full backdrop-blur-md">
+                        <span className="text-[9.5px] font-bold font-mono tracking-widest uppercase text-white/50 bg-black/70 border border-white/5 px-2.5 py-0.5 rounded-full">
                           {activeProject.year}
                         </span>
                       </div>
@@ -1793,13 +1751,9 @@ export const Hero = () => {
 
             {/* Stream Part 7: Champ d'action (ExpertiseSection) */}
             <motion.div
-              initial={{ opacity: 0, y: 35 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
               onViewportEnter={() => {
                 setActiveSection("expertise");
               }}
-              transition={{ duration: 0.8 }}
               className="border-t border-white/5 pt-6 lg:pt-16 space-y-12"
             >
               <div className="space-y-3">
