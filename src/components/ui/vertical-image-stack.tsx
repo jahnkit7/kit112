@@ -20,6 +20,8 @@ interface VerticalImageStackProps {
 
 export function VerticalImageStack({ images, className = "" }: VerticalImageStackProps) {
   const wrapperRef = useRef<HTMLDivElement | null>(null);
+  const [mobileStart, setMobileStart] = useState(0);
+  const [mobileTravel, setMobileTravel] = useState(1);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -27,11 +29,18 @@ export function VerticalImageStack({ images, className = "" }: VerticalImageStac
     const query = window.matchMedia("(max-width: 640px)");
     const update = () => {
       setIsMobile(query.matches);
+      if (wrapperRef.current) {
+        const phoneViewport = window.innerHeight * 0.92;
+        setMobileStart(wrapperRef.current.offsetTop);
+        setMobileTravel(Math.max(1, wrapperRef.current.offsetHeight - phoneViewport));
+      }
     };
     update();
+    const raf = requestAnimationFrame(update);
     window.addEventListener("resize", update);
     query.addEventListener("change", update);
     return () => {
+      cancelAnimationFrame(raf);
       window.removeEventListener("resize", update);
       query.removeEventListener("change", update);
     };
@@ -46,6 +55,7 @@ export function VerticalImageStack({ images, className = "" }: VerticalImageStac
     target: wrapperRef,
     offset: ["start start", "end end"],
   });
+  const { scrollY } = useScroll();
 
   // Map scroll progress (0..1) to image index, with some padding at start/end
   const indexMV = useTransform(scrollYProgress, (p) => {
@@ -57,8 +67,23 @@ export function VerticalImageStack({ images, className = "" }: VerticalImageStac
   });
 
   useMotionValueEvent(indexMV, "change", (v) => {
+    if (isMobile) return;
     const i = Math.round(v as number);
     setCurrentIndex((prev) => (prev === i ? prev : i));
+  });
+
+  useMotionValueEvent(scrollY, "change", (v) => {
+    if (!isMobile || images.length === 0) return;
+    const rawProgress = ((v as number) - mobileStart) / mobileTravel;
+    const progress = Math.min(1, Math.max(0, rawProgress));
+    const adj = Math.min(1, Math.max(0, (progress - 0.05) / 0.9));
+    const i = Math.min(images.length - 1, Math.max(0, Math.round(adj * (images.length - 1))));
+    setCurrentIndex((prev) => (prev === i ? prev : i));
+  });
+
+  const mobilePinY = useTransform(scrollY, (v) => {
+    if (!isMobile) return 0;
+    return Math.min(Math.max((v as number) - mobileStart, 0), mobileTravel);
   });
 
   const scrollToIndex = (i: number) => {
@@ -68,8 +93,8 @@ export function VerticalImageStack({ images, className = "" }: VerticalImageStac
     if (n === 0) return;
     if (isMobile) {
       const sectionTop = window.scrollY + el.getBoundingClientRect().top;
-      const total = Math.max(1, el.offsetHeight - window.innerHeight);
-      const targetP = (i + 0.5) / n;
+      const total = Math.max(1, el.offsetHeight - window.innerHeight * 0.92);
+      const targetP = n === 1 ? 0 : 0.05 + (i / (n - 1)) * 0.9;
       window.scrollTo({ top: sectionTop + targetP * total, behavior: "smooth" });
       return;
     }
@@ -100,7 +125,7 @@ export function VerticalImageStack({ images, className = "" }: VerticalImageStac
     <div ref={wrapperRef} className={`relative w-full touch-pan-y ${className}`} style={{ height: sectionHeight }}>
       <motion.div
         className="sticky top-0 h-[100svh] w-full flex items-center justify-center overflow-hidden select-none pointer-events-none sm:pointer-events-auto touch-pan-y"
-        style={{ perspective: "1200px" }}
+        style={{ perspective: "1200px", y: isMobile ? mobilePinY : 0, position: isMobile ? "relative" : "sticky" }}
       >
         {/* Ambient glow */}
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
