@@ -35,13 +35,6 @@ const BASE_SPRING = {
   mass: 1,
 } as const;
 
-const TAP_SPRING = {
-  type: "spring",
-  stiffness: 450,
-  damping: 18,
-  mass: 1,
-} as const;
-
 export function FocusRail({
   items,
   initialIndex = 0,
