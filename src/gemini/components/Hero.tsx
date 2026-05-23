@@ -1884,17 +1884,11 @@ export const Hero = () => {
               className="border-t border-white/5 pt-16 space-y-12"
             >
               <div className="space-y-4">
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-zinc-900 border border-zinc-850 rounded-full w-fit">
-                  <div className="w-1.5 h-1.5 rounded-full bg-pink-500 shadow-[0_0_8px_2px_rgba(236,72,153,0.3)] animate-pulse" />
-                  <span className="text-[9px] font-mono tracking-widest text-[#a1a1aa] uppercase font-bold text-xs">
-                    APPROCHE & VALEURS
-                  </span>
-                </div>
-
-                <h3 className="text-2xl md:text-4xl font-normal text-white leading-tight tracking-normal max-w-2xl mt-2">
+                <h3 className="text-xl md:text-4xl font-normal text-white leading-tight tracking-normal max-w-2xl">
                   Concevoir avec clarté, rigueur et engagement opérationnel
                 </h3>
               </div>
+
 
               {/* 3D perspective fold container */}
               <div className="grid grid-cols-1 gap-6 pt-4 [perspective:1000px]">
