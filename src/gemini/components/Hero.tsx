@@ -1501,14 +1501,6 @@ export const Hero = () => {
               id="about"
               className="space-y-8 border-t border-white/5 pt-16 scroll-mt-24"
             >
-              {/* Perfect replica of user screenshot "ABOUT" badge */}
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-zinc-900 border border-zinc-800 rounded-full w-fit">
-                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_2px_rgba(16,185,129,0.3)]" />
-                <span className="text-[9px] font-mono tracking-widest text-[#a1a1aa] uppercase font-bold">
-                  ABOUT
-                </span>
-              </div>
-
               {/* Sleek display title with elegant clip-path swipe */}
               <div className="overflow-hidden">
                 <motion.h2
@@ -1516,12 +1508,13 @@ export const Hero = () => {
                   whileInView={{ clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)" }}
                   viewport={{ once: true, margin: "-100px" }}
                   transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-                  className="text-3xl md:text-5xl font-normal text-white leading-tight tracking-tight max-w-3xl"
+                  className="text-2xl md:text-5xl font-normal text-white leading-tight tracking-tight max-w-3xl"
                 >
                   Concevoir des marques et des produits avec clarté, créativité et
                   rigeur stratégique.
                 </motion.h2>
               </div>
+
 
               {/* Extremely soft clean manifesto text */}
               <motion.p
