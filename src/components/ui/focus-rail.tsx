@@ -55,7 +55,6 @@ export function FocusRail({
   const lastWheelTime = React.useRef(0);
 
   const count = items.length;
-  const activeIndex = wrap(0, count, active);
 
   const handlePrev = React.useCallback(() => {
     if (!loop && active === 0) return;
@@ -164,7 +163,15 @@ export function FocusRail({
                 opacity,
                 filter: `blur(${blur}px) brightness(${brightness})`,
               }}
-              transition={(valueName) => (valueName === "scale" ? TAP_SPRING : BASE_SPRING)}
+              transition={{
+                x: BASE_SPRING,
+                y: BASE_SPRING,
+                z: BASE_SPRING,
+                scale: TAP_SPRING,
+                rotateY: BASE_SPRING,
+                opacity: { duration: 0.25 },
+                filter: { duration: 0.3 },
+              }}
               style={{ transformStyle: "preserve-3d" }}
               onClick={() => {
                 if (offset !== 0) setActive((p) => p + offset);
