@@ -1751,13 +1751,9 @@ export const Hero = () => {
 
             {/* Stream Part 7: Champ d'action (ExpertiseSection) */}
             <motion.div
-              initial={{ opacity: 0, y: 35 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
               onViewportEnter={() => {
                 setActiveSection("expertise");
               }}
-              transition={{ duration: 0.8 }}
               className="border-t border-white/5 pt-6 lg:pt-16 space-y-12"
             >
               <div className="space-y-3">
