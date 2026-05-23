@@ -221,33 +221,12 @@ interface ExpertiseCardProps {
 }
 
 const ExpertiseCard = ({ item, index, meta }: ExpertiseCardProps) => {
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"],
-  });
-
-  const reduceMotion = useReducedMotion();
-  const isMobileCard = typeof window !== "undefined" && window.matchMedia("(max-width: 1023px)").matches;
-  const direction = index % 2 === 0 ? -1 : 1;
   const Icon = meta.icon;
 
-  const shellY = useTransform(scrollYProgress, [0, 0.5, 1], ["100%", "0%", "-100%"]);
-  const shellZ = useTransform(scrollYProgress, [0, 0.5, 1], [300, 0, 300]);
-  const shellRotateX = useTransform(scrollYProgress, [0, 0.5, 1], [55, 0, -55]);
-  const shellX = useTransform(scrollYProgress, [0, 0.5, 1], [`${direction * 40}%`, "0%", `${direction * 40}%`]);
-  const shellRotate = useTransform(scrollYProgress, [0, 0.5, 1], [-direction * 5, 0, direction * 5]);
-  const shellSkewX = useTransform(scrollYProgress, [0, 0.5, 1], [direction * 20, 0, -direction * 20]);
-  const shellScaleY = useTransform(scrollYProgress, [0, 0.5, 1], [1.08, 1, 1.08]);
-  const shellBorder = useTransform(scrollYProgress, [0, 0.5, 1], [0.08, 0.16, 0.08]);
-  const shellShadow = useTransform(scrollYProgress, [0, 0.5, 1], [0.22, 0.34, 0.22]);
-  const cardFilter = useMotionTemplate`drop-shadow(0 24px 60px rgba(0,0,0,${shellShadow}))`;
-  const borderColor = useMotionTemplate`rgba(255,255,255,${shellBorder})`;
-
   const cardShell = (
-    <motion.div
+    <div
       className="absolute inset-0 overflow-hidden rounded-[1.75rem] border bg-gradient-to-b from-zinc-950 via-black to-black"
-      style={{ borderColor }}
+      style={{ borderColor: "rgba(255,255,255,0.1)" }}
     >
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/30 via-black/32 to-black/70" />
       <div
@@ -274,7 +253,7 @@ const ExpertiseCard = ({ item, index, meta }: ExpertiseCardProps) => {
         className="pointer-events-none absolute inset-x-6 bottom-0 h-px opacity-0 transition-opacity duration-500 group-hover:opacity-100"
         style={{ background: `linear-gradient(to right, transparent, ${meta.accent}, transparent)` }}
       />
-    </motion.div>
+    </div>
   );
 
   const cardContent = (
@@ -305,29 +284,10 @@ const ExpertiseCard = ({ item, index, meta }: ExpertiseCardProps) => {
     </div>
   );
 
-  if (reduceMotion) {
-    return (
-      <article ref={ref} className="group relative h-full min-h-[320px]">
-        {cardShell}
-        {cardContent}
-      </article>
-    );
-  }
-
   return (
-    <article ref={ref} style={{ perspective: "900px" }} className="group relative h-full min-h-[320px]">
-      <motion.div
-        style={{ y: shellY, z: shellZ, rotateX: shellRotateX, transformStyle: "preserve-3d" }}
-        className="absolute inset-0"
-      >
-        <motion.div
-          style={{ x: shellX, rotate: shellRotate, skewX: shellSkewX, scaleY: shellScaleY, filter: cardFilter }}
-          className="relative h-full will-change-transform"
-        >
-          {cardShell}
-          {cardContent}
-        </motion.div>
-      </motion.div>
+    <article className="group relative h-full min-h-[320px]">
+      {cardShell}
+      {cardContent}
     </article>
   );
 };
