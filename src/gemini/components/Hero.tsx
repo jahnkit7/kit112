@@ -128,6 +128,7 @@ const ParcoursItem = ({
     title: `${title.split("·").pop()?.trim() || "Projet"} ${String(i + 1).padStart(2, "0")}`,
     description,
     meta: year,
+    imageSrc: projects[(index * 2 + i) % projects.length].image,
     gradient: PLACEHOLDER_GRADIENTS[(index + i) % PLACEHOLDER_GRADIENTS.length],
   }));
 
@@ -152,11 +153,11 @@ const ParcoursItem = ({
         <button
           type="button"
           onClick={() => setExpanded((v) => !v)}
-          className="group inline-flex items-center gap-2 text-[10px] md:text-xs font-black uppercase tracking-[0.25em] text-white/60 transition hover:text-white"
+          className="group inline-flex items-center gap-1.5 text-[9px] md:text-[10px] font-black uppercase tracking-[0.18em] text-white/60 transition hover:text-white"
         >
           {expanded ? "Réduire" : "Plus d'infos"}
           <motion.span animate={{ rotate: expanded ? 180 : 0 }} transition={{ duration: 0.25 }}>
-            <ChevronDown size={14} />
+            <ChevronDown size={11} />
           </motion.span>
         </button>
       </motion.div>
@@ -197,9 +198,10 @@ const ParcoursItem = ({
                   {railItems.map((item, i) => (
                     <div
                       key={i}
-                      className="aspect-square rounded-xl border border-white/5"
-                      style={{ background: item.gradient }}
-                    />
+                      className="aspect-square overflow-hidden rounded-xl border border-white/5 bg-zinc-900"
+                    >
+                      <img src={item.imageSrc} alt="" className="h-full w-full object-cover" loading="lazy" />
+                    </div>
                   ))}
                 </div>
               </div>

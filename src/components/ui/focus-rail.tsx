@@ -1,13 +1,12 @@
 import * as React from "react";
-import { motion, type PanInfo } from "motion/react";
-import { ArrowUpRight, ChevronLeft, ChevronRight } from "@/components/icons/hugeicons";
+import { motion, type PanInfo } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 export type FocusRailItem = {
   id: string | number;
   title: string;
   description?: string;
-  imageSrc?: string;
+  imageSrc: string;
   gradient?: string;
   href?: string;
   meta?: string;
@@ -35,6 +34,13 @@ const BASE_SPRING = {
   mass: 1,
 } as const;
 
+const TAP_SPRING = {
+  type: "spring",
+  stiffness: 450,
+  damping: 18,
+  mass: 1,
+} as const;
+
 export function FocusRail({
   items,
   initialIndex = 0,
@@ -49,8 +55,6 @@ export function FocusRail({
   const lastWheelTime = React.useRef(0);
 
   const count = items.length;
-  const activeIndex = wrap(0, count, active);
-  const activeItem = items[activeIndex];
 
   const handlePrev = React.useCallback(() => {
     if (!loop && active === 0) return;
@@ -71,7 +75,6 @@ export function FocusRail({
       const delta = isHorizontal ? e.deltaX : e.deltaY;
 
       if (Math.abs(delta) > 20) {
-        e.preventDefault();
         delta > 0 ? handleNext() : handlePrev();
         lastWheelTime.current = now;
       }
@@ -100,14 +103,14 @@ export function FocusRail({
     if (swipe > swipeConfidenceThreshold) handlePrev();
   };
 
-  const visibleIndices = compact ? [-1, 0, 1] : [-2, -1, 0, 1, 2];
+  const visibleIndices = [-2, -1, 0, 1, 2];
 
   if (!count) return null;
 
   return (
     <div
       className={cn(
-        "group relative aspect-square w-full overflow-hidden rounded-[1.35rem] border border-white/10 bg-zinc-950/70 outline-none ring-0",
+        "group relative aspect-square w-full overflow-hidden rounded-[1.35rem] bg-zinc-950/80 outline-none ring-0",
         "shadow-[0_22px_55px_rgba(0,0,0,0.38)] focus-visible:ring-2 focus-visible:ring-white/30",
         className,
       )}
@@ -119,12 +122,7 @@ export function FocusRail({
       role="region"
       aria-label="Portfolio associé"
     >
-      <motion.div
-        className="absolute inset-0 opacity-60"
-        animate={{ background: activeItem.gradient }}
-        transition={{ duration: 0.45 }}
-      />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_18%,rgba(255,255,255,0.16),transparent_34%),linear-gradient(to_top,rgba(0,0,0,0.72),rgba(0,0,0,0.08)_55%,rgba(0,0,0,0.32))]" />
+      <div className="absolute inset-0 bg-zinc-950/85" />
 
       <motion.div
         className="absolute inset-0 cursor-grab active:cursor-grabbing"
@@ -143,19 +141,19 @@ export function FocusRail({
 
           const isCenter = offset === 0;
           const dist = Math.abs(offset);
-          const xOffset = offset * (compact ? 118 : 150);
-          const zOffset = -dist * 120;
-          const scale = isCenter ? 0.86 : 0.68;
-          const rotateY = offset * -18;
-          const opacity = isCenter ? 1 : Math.max(0.15, 1 - dist * 0.42);
-          const blur = isCenter ? 0 : dist * 4;
+          const xOffset = offset * (compact ? 210 : 320);
+          const zOffset = -dist * 180;
+          const scale = isCenter ? (compact ? 0.92 : 1) : compact ? 0.74 : 0.85;
+          const rotateY = offset * -20;
+          const opacity = isCenter ? 1 : Math.max(0.1, 1 - dist * 0.5);
+          const blur = isCenter ? 0 : dist * 6;
           const brightness = isCenter ? 1 : 0.48;
 
           return (
             <motion.button
               type="button"
               key={`${item.id}-${offset}`}
-              className="absolute left-1/2 top-1/2 aspect-[4/5] w-[62%] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-[1.05rem] border border-white/15 bg-zinc-900 shadow-[0_22px_60px_rgba(0,0,0,0.5)]"
+              className="absolute left-1/2 top-1/2 aspect-[3/4] w-[68%] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-[1.05rem] bg-zinc-900 shadow-[0_22px_60px_rgba(0,0,0,0.5)]"
               animate={{
                 x: `calc(-50% + ${xOffset}px)`,
                 y: "-50%",
@@ -165,68 +163,26 @@ export function FocusRail({
                 opacity,
                 filter: `blur(${blur}px) brightness(${brightness})`,
               }}
-              transition={BASE_SPRING}
+              transition={{
+                x: BASE_SPRING,
+                y: BASE_SPRING,
+                z: BASE_SPRING,
+                scale: TAP_SPRING,
+                rotateY: BASE_SPRING,
+                opacity: { duration: 0.25 },
+                filter: { duration: 0.3 },
+              }}
               style={{ transformStyle: "preserve-3d" }}
               onClick={() => {
                 if (offset !== 0) setActive((p) => p + offset);
               }}
               aria-label={item.title}
             >
-              {item.imageSrc ? (
-                <img src={item.imageSrc} alt="" className="h-full w-full object-cover" draggable={false} />
-              ) : (
-                <div className="h-full w-full" style={{ background: item.gradient }} />
-              )}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-white/10" />
-              {isCenter && <div className="absolute inset-x-3 bottom-3 h-px bg-white/35" />}
+              <img src={item.imageSrc} alt="" className="h-full w-full object-cover" draggable={false} />
             </motion.button>
           );
         })}
       </motion.div>
-
-      <div className="pointer-events-none absolute inset-x-4 bottom-4 z-10 flex items-end justify-between gap-3">
-        <div className="min-w-0">
-          {activeItem.meta && (
-            <div className="mb-1 text-[9px] font-black uppercase tracking-[0.28em] text-white/55">
-              {activeItem.meta}
-            </div>
-          )}
-          <div className="truncate text-sm font-black uppercase tracking-normal text-white">
-            {activeItem.title}
-          </div>
-        </div>
-        {activeItem.href && (
-          <a
-            href={activeItem.href}
-            className="pointer-events-auto flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur-sm transition hover:bg-white/25"
-            aria-label="Ouvrir le projet"
-          >
-            <ArrowUpRight size={16} />
-          </a>
-        )}
-      </div>
-
-      <div className="absolute inset-x-4 top-4 z-10 flex items-center justify-between">
-        <button
-          type="button"
-          onClick={handlePrev}
-          className="flex h-8 w-8 items-center justify-center rounded-full bg-black/30 text-white/80 backdrop-blur-sm transition hover:bg-white/15 hover:text-white"
-          aria-label="Image précédente"
-        >
-          <ChevronLeft size={15} />
-        </button>
-        <span className="rounded-full bg-black/25 px-2.5 py-1 text-[10px] font-bold text-white/65 backdrop-blur-sm">
-          {activeIndex + 1} / {count}
-        </span>
-        <button
-          type="button"
-          onClick={handleNext}
-          className="flex h-8 w-8 items-center justify-center rounded-full bg-black/30 text-white/80 backdrop-blur-sm transition hover:bg-white/15 hover:text-white"
-          aria-label="Image suivante"
-        >
-          <ChevronRight size={15} />
-        </button>
-      </div>
     </div>
   );
 }
