@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform, useMotionValueEvent } from "framer-motion";
 import { ChevronUp, ChevronDown } from "lucide-react";
 
@@ -20,16 +20,35 @@ interface VerticalImageStackProps {
 
 export function VerticalImageStack({ images, className = "" }: VerticalImageStackProps) {
   const wrapperRef = useRef<HTMLDivElement | null>(null);
+  const [mobileStart, setMobileStart] = useState(0);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const query = window.matchMedia("(max-width: 640px)");
+    const update = () => {
+      setIsMobile(query.matches);
+      if (wrapperRef.current) setMobileStart(wrapperRef.current.offsetTop);
+    };
+    update();
+    window.addEventListener("resize", update);
+    query.addEventListener("change", update);
+    return () => {
+      window.removeEventListener("resize", update);
+      query.removeEventListener("change", update);
+    };
+  }, []);
 
   // Tall outer wrapper drives scroll-pinned card flipping.
   // Each image gets ~80vh of scroll distance; sticky inner holds the stack at center.
-  const sectionHeight = `${Math.max(images.length, 1) * 80 + 40}vh`;
+  const scrollStep = isMobile ? 54 : 80;
+  const sectionHeight = `${Math.max(images.length, 1) * scrollStep + (isMobile ? 20 : 40)}vh`;
 
   const { scrollYProgress } = useScroll({
     target: wrapperRef,
     offset: ["start start", "end end"],
   });
+  const { scrollY } = useScroll();
 
   // Map scroll progress (0..1) to image index, with some padding at start/end
   const indexMV = useTransform(scrollYProgress, (p) => {
@@ -41,14 +60,36 @@ export function VerticalImageStack({ images, className = "" }: VerticalImageStac
   });
 
   useMotionValueEvent(indexMV, "change", (v) => {
+    if (isMobile) return;
     const i = Math.round(v as number);
     setCurrentIndex((prev) => (prev === i ? prev : i));
+  });
+
+  useMotionValueEvent(scrollY, "change", (v) => {
+    if (!isMobile || images.length === 0 || !wrapperRef.current) return;
+    const total = Math.max(1, wrapperRef.current.offsetHeight - window.innerHeight * 0.92);
+    const progress = Math.min(1, Math.max(0, ((v as number) - mobileStart) / total));
+    const nextIndex = Math.min(images.length - 1, Math.floor(progress * images.length));
+    setCurrentIndex((prev) => (prev === nextIndex ? prev : nextIndex));
+  });
+
+  const mobilePinY = useTransform(scrollY, (v) => {
+    if (!isMobile || !wrapperRef.current) return 0;
+    const total = Math.max(0, wrapperRef.current.offsetHeight - window.innerHeight * 0.92);
+    return Math.min(Math.max((v as number) - mobileStart, 0), total);
   });
 
   const scrollToIndex = (i: number) => {
     const el = wrapperRef.current;
     if (!el) return;
     const n = images.length;
+    if (n === 0) return;
+    if (isMobile) {
+      const total = Math.max(1, el.offsetHeight - window.innerHeight * 0.92);
+      const targetP = (i + 0.5) / n;
+      window.scrollTo({ top: mobileStart + targetP * total, behavior: "smooth" });
+      return;
+    }
     const rect = el.getBoundingClientRect();
     const total = el.offsetHeight - window.innerHeight;
     // target progress for index i = 0.05 + (i + 0.5) / n * 0.9
@@ -59,19 +100,26 @@ export function VerticalImageStack({ images, className = "" }: VerticalImageStac
 
   const getCardStyle = (index: number) => {
     const diff = index - currentIndex;
+    const offsets = isMobile
+      ? { near: 145, far: 235, exit: 340, zNear: -72, zFar: -148, zExit: -220 }
+      : { near: 280, far: 440, exit: 600, zNear: -120, zFar: -240, zExit: -360 };
+
     if (diff === 0) return { y: 0, z: 0, scale: 1, opacity: 1, zIndex: 50, rotateX: 0 };
-    if (diff === -1) return { y: -280, z: -120, scale: 0.86, opacity: 0.55, zIndex: 40, rotateX: 14 };
-    if (diff === -2) return { y: -440, z: -240, scale: 0.72, opacity: 0.22, zIndex: 30, rotateX: 22 };
-    if (diff === 1) return { y: 280, z: -120, scale: 0.86, opacity: 0.55, zIndex: 40, rotateX: -14 };
-    if (diff === 2) return { y: 440, z: -240, scale: 0.72, opacity: 0.22, zIndex: 30, rotateX: -22 };
-    return { y: diff > 0 ? 600 : -600, z: -360, scale: 0.6, opacity: 0, zIndex: 0, rotateX: diff > 0 ? -28 : 28 };
+    if (diff === -1) return { y: -offsets.near, z: offsets.zNear, scale: isMobile ? 0.9 : 0.86, opacity: isMobile ? 0.48 : 0.55, zIndex: 40, rotateX: 14 };
+    if (diff === -2) return { y: -offsets.far, z: offsets.zFar, scale: isMobile ? 0.78 : 0.72, opacity: isMobile ? 0.18 : 0.22, zIndex: 30, rotateX: 22 };
+    if (diff === 1) return { y: offsets.near, z: offsets.zNear, scale: isMobile ? 0.9 : 0.86, opacity: isMobile ? 0.48 : 0.55, zIndex: 40, rotateX: -14 };
+    if (diff === 2) return { y: offsets.far, z: offsets.zFar, scale: isMobile ? 0.78 : 0.72, opacity: isMobile ? 0.18 : 0.22, zIndex: 30, rotateX: -22 };
+    return { y: diff > 0 ? offsets.exit : -offsets.exit, z: offsets.zExit, scale: 0.6, opacity: 0, zIndex: 0, rotateX: diff > 0 ? -28 : 28 };
   };
 
   const isVisible = (index: number) => Math.abs(index - currentIndex) <= 2;
 
   return (
-    <div ref={wrapperRef} className={`relative w-full ${className}`} style={{ height: sectionHeight }}>
-      <div className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden select-none" style={{ perspective: "1200px" }}>
+    <div ref={wrapperRef} className={`relative w-full touch-pan-y ${className}`} style={{ height: sectionHeight }}>
+      <motion.div
+        className="sticky top-0 h-[100svh] w-full flex items-center justify-center overflow-hidden select-none pointer-events-none sm:pointer-events-auto touch-pan-y"
+        style={{ perspective: "1200px", y: isMobile ? mobilePinY : 0, position: isMobile ? "relative" : "sticky" }}
+      >
         {/* Ambient glow */}
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
           <div className="w-[60%] h-[60%] rounded-full bg-brand-orange/10 blur-[120px]" />
@@ -79,7 +127,7 @@ export function VerticalImageStack({ images, className = "" }: VerticalImageStac
 
         {/* Card stack */}
         <div
-          className="relative w-[78%] max-w-[320px] sm:max-w-[380px] lg:max-w-[420px] aspect-[4/5]"
+          className="relative w-[72vw] max-w-[300px] sm:w-[78%] sm:max-w-[380px] lg:max-w-[420px] aspect-[4/5] touch-pan-y"
           style={{ transformStyle: "preserve-3d" }}
         >
           {images.map((image, index) => {
@@ -91,7 +139,7 @@ export function VerticalImageStack({ images, className = "" }: VerticalImageStac
                 key={image.id}
                 animate={style}
                 transition={{ type: "spring", stiffness: 220, damping: 30, mass: 0.9 }}
-                className="absolute inset-0 rounded-3xl overflow-hidden border border-white/10 bg-zinc-900 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.6)]"
+                className="absolute inset-0 rounded-3xl overflow-hidden border border-white/10 bg-zinc-900 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.6)] touch-pan-y"
                 style={{ transformStyle: "preserve-3d" }}
               >
                 <img
@@ -128,7 +176,7 @@ export function VerticalImageStack({ images, className = "" }: VerticalImageStac
         </div>
 
         {/* Navigation dots */}
-        <div className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 flex flex-col items-center gap-2 z-10">
+        <div className="absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 flex flex-col items-center gap-2 z-10 pointer-events-auto">
           {images.map((_, index) => (
             <button
               key={index}
@@ -160,18 +208,18 @@ export function VerticalImageStack({ images, className = "" }: VerticalImageStac
         <button
           onClick={() => scrollToIndex(Math.max(0, currentIndex - 1))}
           aria-label="Previous"
-          className="absolute left-4 sm:left-6 top-1/2 -translate-y-8 w-9 h-9 rounded-full bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 hover:text-white flex items-center justify-center z-10"
+          className="absolute left-3 sm:left-6 top-1/2 -translate-y-8 w-9 h-9 rounded-full bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 hover:text-white flex items-center justify-center z-10 pointer-events-auto"
         >
           <ChevronUp size={16} />
         </button>
         <button
           onClick={() => scrollToIndex(Math.min(images.length - 1, currentIndex + 1))}
           aria-label="Next"
-          className="absolute left-4 sm:left-6 top-1/2 translate-y-0 w-9 h-9 rounded-full bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 hover:text-white flex items-center justify-center z-10"
+          className="absolute left-3 sm:left-6 top-1/2 translate-y-0 w-9 h-9 rounded-full bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 hover:text-white flex items-center justify-center z-10 pointer-events-auto"
         >
           <ChevronDown size={16} />
         </button>
-      </div>
+      </motion.div>
     </div>
   );
 }
