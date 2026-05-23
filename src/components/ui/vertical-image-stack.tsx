@@ -20,6 +20,7 @@ interface VerticalImageStackProps {
 
 export function VerticalImageStack({ images, className = "" }: VerticalImageStackProps) {
   const wrapperRef = useRef<HTMLDivElement | null>(null);
+  const indexRef = useRef(0);
   const [mobileStart, setMobileStart] = useState(0);
   const [mobileTravel, setMobileTravel] = useState(1);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -27,6 +28,7 @@ export function VerticalImageStack({ images, className = "" }: VerticalImageStac
 
   useEffect(() => {
     const query = window.matchMedia("(max-width: 640px)");
+    let frame = 0;
     const update = () => {
       setIsMobile(query.matches);
       if (wrapperRef.current) {
@@ -35,16 +37,24 @@ export function VerticalImageStack({ images, className = "" }: VerticalImageStac
         setMobileTravel(Math.max(1, wrapperRef.current.offsetHeight - phoneViewport));
       }
     };
-    update();
-    const raf = requestAnimationFrame(update);
-    window.addEventListener("resize", update);
-    query.addEventListener("change", update);
-    return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener("resize", update);
-      query.removeEventListener("change", update);
+    const scheduleUpdate = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(update);
     };
-  }, []);
+    update();
+    scheduleUpdate();
+    const observed = wrapperRef.current?.parentElement;
+    const resizeObserver = observed ? new ResizeObserver(scheduleUpdate) : null;
+    if (observed) resizeObserver?.observe(observed);
+    window.addEventListener("resize", scheduleUpdate);
+    query.addEventListener("change", scheduleUpdate);
+    return () => {
+      cancelAnimationFrame(frame);
+      resizeObserver?.disconnect();
+      window.removeEventListener("resize", scheduleUpdate);
+      query.removeEventListener("change", scheduleUpdate);
+    };
+  }, [images.length]);
 
   // Tall outer wrapper drives scroll-pinned card flipping.
   // Each image gets ~80vh of scroll distance; sticky inner holds the stack at center.
@@ -69,7 +79,10 @@ export function VerticalImageStack({ images, className = "" }: VerticalImageStac
   useMotionValueEvent(indexMV, "change", (v) => {
     if (isMobile) return;
     const i = Math.round(v as number);
-    setCurrentIndex((prev) => (prev === i ? prev : i));
+    if (indexRef.current !== i) {
+      indexRef.current = i;
+      setCurrentIndex(i);
+    }
   });
 
   useMotionValueEvent(scrollY, "change", (v) => {
@@ -78,7 +91,10 @@ export function VerticalImageStack({ images, className = "" }: VerticalImageStac
     const progress = Math.min(1, Math.max(0, rawProgress));
     const adj = Math.min(1, Math.max(0, (progress - 0.05) / 0.9));
     const i = Math.min(images.length - 1, Math.max(0, Math.round(adj * (images.length - 1))));
-    setCurrentIndex((prev) => (prev === i ? prev : i));
+    if (indexRef.current !== i) {
+      indexRef.current = i;
+      setCurrentIndex(i);
+    }
   });
 
   const mobilePinY = useTransform(scrollY, (v) => {
