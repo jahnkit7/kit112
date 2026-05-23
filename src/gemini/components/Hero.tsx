@@ -1194,7 +1194,7 @@ export const Hero = () => {
                     {[Facebook, Twitter, Youtube, Linkedin].map((Icon, idx) => (
                       <button
                         key={idx}
-                        className="w-5 h-5 rounded-full bg-zinc-950/70 backdrop-blur-md border border-white/10 flex items-center justify-center text-zinc-300 hover:text-white hover:bg-brand-orange hover:border-brand-orange/20 hover:scale-105 transition-all duration-300 pointer-events-auto"
+                        className="w-5 h-5 rounded-full bg-zinc-950/90 border border-white/10 flex items-center justify-center text-zinc-300 hover:text-white hover:bg-brand-orange hover:border-brand-orange/20 hover:scale-105 transition-all duration-300 pointer-events-auto"
                       >
                         <Icon size={10} />
                       </button>
@@ -1318,7 +1318,7 @@ export const Hero = () => {
                           <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-ping shrink-0" />
                           PROJET DÉVERROUILLÉ
                         </span>
-                        <span className="text-[9.5px] font-bold font-mono tracking-widest uppercase text-white/50 bg-black/40 border border-white/5 px-2.5 py-0.5 rounded-full backdrop-blur-md">
+                        <span className="text-[9.5px] font-bold font-mono tracking-widest uppercase text-white/50 bg-black/70 border border-white/5 px-2.5 py-0.5 rounded-full">
                           {activeProject.year}
                         </span>
                       </div>
