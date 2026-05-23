@@ -60,23 +60,18 @@ export function VerticalImageStack({ images, className = "" }: VerticalImageStac
   });
 
   useMotionValueEvent(indexMV, "change", (v) => {
-    if (isMobile) return;
     const i = Math.round(v as number);
     setCurrentIndex((prev) => (prev === i ? prev : i));
   });
 
-  useMotionValueEvent(scrollY, "change", (v) => {
-    if (!isMobile || images.length === 0 || !wrapperRef.current) return;
-    const total = Math.max(1, wrapperRef.current.offsetHeight - window.innerHeight * 0.92);
-    const progress = Math.min(1, Math.max(0, ((v as number) - mobileStart) / total));
-    const nextIndex = Math.min(images.length - 1, Math.floor(progress * images.length));
-    setCurrentIndex((prev) => (prev === nextIndex ? prev : nextIndex));
-  });
-
+  // Quantized pin position on mobile — moves in discrete steps per card,
+  // avoiding a setState/transform churn on every scroll frame.
   const mobilePinY = useTransform(scrollY, (v) => {
-    if (!isMobile || !wrapperRef.current) return 0;
+    if (!isMobile || !wrapperRef.current || images.length === 0) return 0;
     const total = Math.max(0, wrapperRef.current.offsetHeight - window.innerHeight * 0.92);
-    return Math.min(Math.max((v as number) - mobileStart, 0), total);
+    const raw = Math.min(Math.max((v as number) - mobileStart, 0), total);
+    // Snap to ~4px increments to reduce layout work
+    return Math.round(raw / 4) * 4;
   });
 
   const scrollToIndex = (i: number) => {
@@ -92,7 +87,6 @@ export function VerticalImageStack({ images, className = "" }: VerticalImageStac
     }
     const rect = el.getBoundingClientRect();
     const total = el.offsetHeight - window.innerHeight;
-    // target progress for index i = 0.05 + (i + 0.5) / n * 0.9
     const targetP = 0.05 + ((i + 0.5) / n) * 0.9;
     const targetScroll = window.scrollY + rect.top + targetP * total;
     window.scrollTo({ top: targetScroll, behavior: "smooth" });
@@ -101,18 +95,18 @@ export function VerticalImageStack({ images, className = "" }: VerticalImageStac
   const getCardStyle = (index: number) => {
     const diff = index - currentIndex;
     const offsets = isMobile
-      ? { near: 145, far: 235, exit: 340, zNear: -72, zFar: -148, zExit: -220 }
+      ? { near: 145, far: 235, exit: 340, zNear: 0, zFar: 0, zExit: 0 }
       : { near: 280, far: 440, exit: 600, zNear: -120, zFar: -240, zExit: -360 };
 
     if (diff === 0) return { y: 0, z: 0, scale: 1, opacity: 1, zIndex: 50, rotateX: 0 };
-    if (diff === -1) return { y: -offsets.near, z: offsets.zNear, scale: isMobile ? 0.9 : 0.86, opacity: isMobile ? 0.48 : 0.55, zIndex: 40, rotateX: 14 };
-    if (diff === -2) return { y: -offsets.far, z: offsets.zFar, scale: isMobile ? 0.78 : 0.72, opacity: isMobile ? 0.18 : 0.22, zIndex: 30, rotateX: 22 };
-    if (diff === 1) return { y: offsets.near, z: offsets.zNear, scale: isMobile ? 0.9 : 0.86, opacity: isMobile ? 0.48 : 0.55, zIndex: 40, rotateX: -14 };
-    if (diff === 2) return { y: offsets.far, z: offsets.zFar, scale: isMobile ? 0.78 : 0.72, opacity: isMobile ? 0.18 : 0.22, zIndex: 30, rotateX: -22 };
-    return { y: diff > 0 ? offsets.exit : -offsets.exit, z: offsets.zExit, scale: 0.6, opacity: 0, zIndex: 0, rotateX: diff > 0 ? -28 : 28 };
+    if (diff === -1) return { y: -offsets.near, z: offsets.zNear, scale: isMobile ? 0.9 : 0.86, opacity: isMobile ? 0.45 : 0.55, zIndex: 40, rotateX: isMobile ? 0 : 14 };
+    if (diff === -2) return { y: -offsets.far, z: offsets.zFar, scale: isMobile ? 0.8 : 0.72, opacity: isMobile ? 0.18 : 0.22, zIndex: 30, rotateX: isMobile ? 0 : 22 };
+    if (diff === 1) return { y: offsets.near, z: offsets.zNear, scale: isMobile ? 0.9 : 0.86, opacity: isMobile ? 0.45 : 0.55, zIndex: 40, rotateX: isMobile ? 0 : -14 };
+    if (diff === 2) return { y: offsets.far, z: offsets.zFar, scale: isMobile ? 0.8 : 0.72, opacity: isMobile ? 0.18 : 0.22, zIndex: 30, rotateX: isMobile ? 0 : -22 };
+    return { y: diff > 0 ? offsets.exit : -offsets.exit, z: offsets.zExit, scale: 0.6, opacity: 0, zIndex: 0, rotateX: 0 };
   };
 
-  const isVisible = (index: number) => Math.abs(index - currentIndex) <= 2;
+  const isVisible = (index: number) => Math.abs(index - currentIndex) <= (isMobile ? 1 : 2);
 
   return (
     <div ref={wrapperRef} className={`relative w-full touch-pan-y ${className}`} style={{ height: sectionHeight }}>
@@ -138,9 +132,11 @@ export function VerticalImageStack({ images, className = "" }: VerticalImageStac
               <motion.div
                 key={image.id}
                 animate={style}
-                transition={{ type: "spring", stiffness: 220, damping: 30, mass: 0.9 }}
-                className="absolute inset-0 rounded-3xl overflow-hidden border border-white/10 bg-zinc-900 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.6)] touch-pan-y"
-                style={{ transformStyle: "preserve-3d" }}
+                transition={isMobile
+                  ? { type: "tween", duration: 0.28, ease: [0.32, 0.72, 0, 1] }
+                  : { type: "spring", stiffness: 220, damping: 30, mass: 0.9 }}
+                className="absolute inset-0 rounded-3xl overflow-hidden border border-white/10 bg-zinc-900 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.6)] touch-pan-y will-change-transform"
+                style={{ transformStyle: "preserve-3d", backfaceVisibility: "hidden" }}
               >
                 <img
                   src={image.src}
