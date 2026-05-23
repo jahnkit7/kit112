@@ -6,6 +6,7 @@ import {
   AnimatePresence,
   useMotionTemplate,
   useReducedMotion,
+  type Variants,
 } from "motion/react";
 import {
   Facebook,
@@ -84,19 +85,21 @@ const PLACEHOLDER_GRADIENTS = [
   "linear-gradient(135deg,#3d2b1f 0%,#6b3a2a 50%,#cd7f32 100%)",
 ];
 
-const PARCOURS_REVEAL = {
+const PARCOURS_EASE = [0.16, 1, 0.3, 1] as const;
+
+const PARCOURS_REVEAL: Variants = {
   hidden: { opacity: 0, y: 56, filter: "blur(14px)" },
   show: {
     opacity: 1,
     y: 0,
     filter: "blur(0px)",
-    transition: { duration: 0.95, ease: [0.16, 1, 0.3, 1] },
+    transition: { duration: 0.95, ease: PARCOURS_EASE },
   },
 };
 
-const PARCOURS_CHILD_REVEAL = {
+const PARCOURS_CHILD_REVEAL: Variants = {
   hidden: { opacity: 0, y: 24 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } },
+  show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: PARCOURS_EASE } },
 };
 
 // Inline SVG placeholder kept for legacy modal grids (zero network cost).
