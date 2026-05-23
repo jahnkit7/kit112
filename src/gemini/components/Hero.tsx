@@ -1804,21 +1804,13 @@ export const Hero = () => {
               className="border-t border-white/5 pt-16 space-y-12 scroll-mt-24"
             >
               <div className="space-y-4">
-                <BlurFade y={10} duration={0.6}>
-                  <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-zinc-900 border border-zinc-800 rounded-full w-fit">
-                    <div className="w-1.5 h-1.5 rounded-full bg-[#00c8ff] shadow-[0_0_8px_2px_rgba(0,200,255,0.3)] anim-pulse" />
-                    <span className="text-[9px] font-mono tracking-widest text-[#a1a1aa] uppercase font-bold text-xs">
-                      TOOLS & EXPERTISE
-                    </span>
-                  </div>
-                </BlurFade>
-
                 <MaskReveal as="div" className="max-w-2xl" duration={1.1}>
-                  <h3 className="text-2xl md:text-4xl font-normal text-white leading-tight tracking-normal mt-2">
+                  <h3 className="text-xl md:text-4xl font-normal text-white leading-tight tracking-normal">
                     See how my expertise with these tools drives better results
                   </h3>
                 </MaskReveal>
               </div>
+
 
               {/* Tools row lists */}
               <div className="divide-y divide-white/5 pt-4">
