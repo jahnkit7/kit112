@@ -220,6 +220,50 @@
 }
 @media (max-width: 1023px) {
   .gemini-root .noise-overlay { display: none; }
+
+  .gemini-root .mobile-phone-shell {
+    box-shadow: 0 8px 26px rgba(0, 0, 0, 0.62);
+    contain: layout paint size;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+
+  .gemini-root .mobile-stream-frame {
+    contain: strict;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+
+  .gemini-root .mobile-stream-inner {
+    contain: layout paint;
+    transform: translate3d(0, 0, 0);
+    will-change: transform, opacity;
+  }
+
+  .gemini-root .backdrop-blur,
+  .gemini-root .backdrop-blur-sm,
+  .gemini-root .backdrop-blur-md,
+  .gemini-root .backdrop-blur-lg,
+  .gemini-root .backdrop-blur-xl,
+  .gemini-root .backdrop-blur-2xl,
+  .gemini-root .backdrop-blur-3xl,
+  .gemini-root .glass,
+  .gemini-root .glass-card {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+
+  .gemini-root .shadow-\[0_30px_80px_rgba\(0\,0\,0\,0\.4\)\],
+  .gemini-root .shadow-\[0_30px_80px_-20px_rgba\(0\,0\,0\,0\.7\)\] {
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.34) !important;
+  }
+
+  .gemini-root .blur-\[80px\],
+  .gemini-root .blur-\[100px\],
+  .gemini-root .blur-\[120px\],
+  .gemini-root .blur-\[180px\] {
+    filter: blur(32px) !important;
+  }
 }
 
 .gemini-root .perspective-1000 { perspective: 1000px; }

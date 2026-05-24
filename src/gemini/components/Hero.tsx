@@ -62,11 +62,6 @@ import {
   StaggerList,
   staggerItem,
 } from "./CinematicReveal";
-import { ZoomParallax } from "@/components/ui/zoom-parallax";
-import { VerticalImageStack } from "@/components/ui/vertical-image-stack";
-import { ScrollTiltedGrid } from "@/components/ui/scroll-tilted-grid";
-import { Scroller } from "@/components/ui/scroller-1";
-import ImmersiveScrollGallery from "@/components/ui/immersive-scroll-gallery";
 import { FocusRail, type FocusRailItem } from "@/components/ui/focus-rail";
 
 import { ContainerScroll, CardsContainer, CardTransformed } from "@/components/ui/animated-cards-stack";
@@ -614,6 +609,11 @@ export const Hero = () => {
   ];
 
   useEffect(() => {
+    if (isMobile) {
+      setShowNotification(false);
+      return;
+    }
+
     let cancelled = false;
     let showT: ReturnType<typeof setTimeout>;
     const cycle = () => {
@@ -635,7 +635,7 @@ export const Hero = () => {
       clearTimeout(initial);
       clearTimeout(showT);
     };
-  }, [notifications.length]);
+  }, [isMobile, notifications.length]);
 
 
   const { data: experiencesSetting } = useSetting("experiences");
@@ -677,7 +677,7 @@ export const Hero = () => {
     },
   };
 
-  const itemVariants: any = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, y: 30 },
     visible: {
       opacity: 1,
@@ -944,22 +944,6 @@ export const Hero = () => {
       {/* Mobile/Tablet top logo removed — logo now displayed inline above the headline */}
 
 
-      {/* Mobile phone screen chrome: masks are clipped to the inner screen rectangle only */}
-      {isMobile && (
-        <div
-          className={`fixed inset-x-0 top-[4vh] z-[55] mx-auto h-[92vh] max-h-[900px] w-[92vw] max-w-[460px] rounded-[52px] border-[10px] border-[#161619] shadow-[0_12px_30px_rgba(0,0,0,0.7)] ring-1 ring-white/10 pointer-events-none overflow-hidden transition-opacity duration-500 lg:hidden ${
-            isScrolled ? "opacity-100" : "opacity-0"
-          }`}
-          aria-hidden="true"
-        >
-          <div className="absolute inset-0 rounded-[40px] overflow-hidden">
-            {dockOverlay}
-          </div>
-        </div>
-      )}
-
-
-
       <div className="max-w-[1600px] mx-auto w-full px-0 lg:px-10 relative z-10 py-0 lg:py-6">
         {/* Sticky Split Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.55fr)] gap-8 lg:gap-12 items-start">
@@ -972,7 +956,7 @@ export const Hero = () => {
               transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
               className={
                 isMobile
-                  ? `group fixed inset-x-0 top-[4vh] z-30 mx-auto w-[92vw] max-w-[460px] h-[92vh] max-h-[900px] rounded-[52px] overflow-hidden border-[10px] border-[#161619] shadow-[0_12px_30px_rgba(0,0,0,0.7)] bg-zinc-950 ring-1 ring-white/10 transition-all duration-500 ${
+                  ? `mobile-phone-shell group fixed inset-x-0 top-[4vh] z-30 mx-auto w-[92vw] max-w-[460px] h-[92vh] max-h-[900px] rounded-[52px] overflow-hidden border-[10px] border-[#161619] bg-zinc-950 transition-opacity duration-300 ${
                       !isScrolled ? "pointer-events-none" : "pointer-events-auto"
                     }`
                   : "group relative w-full max-w-[380px] xl:max-w-[410px] 2xl:max-w-[440px] shrink-0 h-[calc(100vh-3rem)] max-h-[820px] rounded-[44px] overflow-hidden border-[9px] border-[#161619] shadow-[0_35px_80px_rgba(0,0,0,0.95)] bg-zinc-950 ring-1 ring-white/10 pointer-events-auto"
@@ -982,11 +966,15 @@ export const Hero = () => {
               <motion.div
                 onMouseEnter={() => setIsIslandHovered(true)}
                 onMouseLeave={() => setIsIslandHovered(false)}
-                animate={{
-                  width: showNotification ? 260 : isIslandHovered ? 250 : 132,
-                  height: showNotification ? 52 : isIslandHovered ? 46 : 26,
-                  borderRadius: showNotification || isIslandHovered ? "26px" : "9999px",
-                }}
+                animate={
+                  isMobile
+                    ? { width: 132, height: 26, borderRadius: "9999px" }
+                    : {
+                        width: showNotification ? 260 : isIslandHovered ? 250 : 132,
+                        height: showNotification ? 52 : isIslandHovered ? 46 : 26,
+                        borderRadius: showNotification || isIslandHovered ? "26px" : "9999px",
+                      }
+                }
                 transition={{ type: "spring", stiffness: 320, damping: 26 }}
                 className="absolute top-2.5 left-1/2 -translate-x-1/2 bg-black z-50 border border-white/10 flex items-center justify-between px-4 shadow-xl cursor-default overflow-hidden pointer-events-auto shadow-black/80 ring-1 ring-white/5"
               >
@@ -1151,7 +1139,7 @@ export const Hero = () => {
                 </AnimatePresence>
 
                 {/* Sweeping biometric active preview scanline */}
-                {activeProject && (
+                {activeProject && !isMobile && (
                   <motion.div
                     initial={{ y: "-100%" }}
                     animate={{ y: "100vh" }}
@@ -1162,7 +1150,7 @@ export const Hero = () => {
 
                 {/* Pair hologram flash effect */}
                 <AnimatePresence>
-                  {activeProject && (
+                  {activeProject && !isMobile && (
                     <motion.div
                       key="unlock-flash-glow"
                       initial={{ opacity: 0.5 }}
@@ -1189,7 +1177,7 @@ export const Hero = () => {
                     style={{ opacity: isMobile ? mobilePhoneDetailsOpacity : 1 }}
                     exit={{ opacity: 0, x: 25 }}
                     transition={{ duration: 0.4 }}
-                    className={`absolute right-3 top-20 flex flex-col gap-1.5 z-30 ${isMobile && !isScrolled ? "hidden" : "flex"}`}
+                    className={`absolute right-3 top-20 hidden flex-col gap-1.5 z-30 lg:flex`}
                   >
                     {[Facebook, Twitter, Youtube, Linkedin].map((Icon, idx) => (
                       <button
@@ -1247,7 +1235,7 @@ export const Hero = () => {
                               stiffness: 350,
                               damping: 25,
                             }}
-                            className="relative h-10 rounded-full border border-white/10 flex items-center overflow-hidden px-1 bg-zinc-900/40 backdrop-blur-xl shadow-lg"
+                            className="relative h-10 rounded-full border border-white/10 flex items-center overflow-hidden px-1 bg-zinc-900/80 lg:bg-zinc-900/40 lg:backdrop-blur-xl shadow-lg"
                           >
                             {/* Background Morph Shifter */}
                             <motion.div
@@ -1344,7 +1332,7 @@ export const Hero = () => {
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.2 }}
-                        className="bg-zinc-950/85 border border-white/10 rounded-2xl p-2.5 flex items-center justify-between backdrop-blur-xl mt-1 shadow-inner"
+                        className="bg-zinc-950/90 border border-white/10 rounded-2xl p-2.5 flex items-center justify-between lg:backdrop-blur-xl mt-1 shadow-inner"
                       >
                         <div className="flex items-center gap-2 min-w-0">
                           <div className="w-6 h-6 rounded-lg bg-[#10b981]/15 border border-[#10b981]/25 flex items-center justify-center text-[#10b981] shrink-0 animate-pulse">
@@ -1373,8 +1361,8 @@ export const Hero = () => {
                 </div>
               </motion.div>
 
-              {/* Desktop dock + immersive screens — mirrors mobile behaviour inside the phone frame */}
-              <div className="hidden lg:block absolute inset-0 z-40 pointer-events-none">
+              {/* Dock + immersive screens — rendered inside the single phone layer. */}
+              <div className="absolute inset-0 z-40 pointer-events-none">
                 {dockOverlay}
               </div>
             </motion.div>
@@ -1387,7 +1375,7 @@ export const Hero = () => {
           <div
             className={
               isMobile
-                ? "fixed inset-x-0 top-[4vh] z-[45] mx-auto h-[92vh] max-h-[900px] w-[92vw] max-w-[460px] overflow-hidden rounded-[52px] border-[10px] border-transparent box-border pointer-events-none lg:static lg:h-auto lg:max-h-none lg:w-auto lg:max-w-none lg:overflow-visible lg:rounded-none lg:border-0"
+                ? "mobile-stream-frame fixed inset-x-0 top-[4vh] z-[45] mx-auto h-[92vh] max-h-[900px] w-[92vw] max-w-[460px] overflow-hidden rounded-[52px] border-[10px] border-transparent box-border pointer-events-none lg:static lg:h-auto lg:max-h-none lg:w-auto lg:max-w-none lg:overflow-visible lg:rounded-none lg:border-0"
                 : "contents"
             }
           >
@@ -1403,7 +1391,7 @@ export const Hero = () => {
             }}
             className={`flex flex-col gap-10 lg:gap-32 py-4 lg:py-6 relative z-40 w-full max-w-[500px] lg:max-w-none min-w-0 mx-auto px-8 sm:px-10 lg:pl-0 lg:pr-4 pt-[106vh] pb-16 lg:pb-32 lg:pt-2 transition-opacity duration-500 ${
               isMobile && !isScrolled ? "pointer-events-none" : "pointer-events-auto"
-            }`}
+            } ${isMobile ? "mobile-stream-inner" : ""}`}
           >
             {/* Stream Part 1: Hero Welcome & Identity */}
             <motion.div
@@ -1888,7 +1876,7 @@ export const Hero = () => {
               </div>
 
               {/* Stacked cards reveal (scroll-driven) — dark DA */}
-              <ContainerScroll className="!min-h-[300vh] lg:!min-h-[220vh]">
+              <ContainerScroll className="!min-h-[180vh] lg:!min-h-[220vh]">
                 <CardsContainer>
                   {testimonialsData.map((t, idx) => (
                     <CardTransformed
@@ -2118,7 +2106,7 @@ export const Hero = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
-            className="fixed inset-0 bg-black/85 backdrop-blur-md z-40 flex flex-col items-center justify-center pointer-events-none select-none"
+            className="fixed inset-0 bg-black/90 z-40 flex flex-col items-center justify-center pointer-events-none select-none"
           >
             <motion.div
               initial={{ y: 35, opacity: 0 }}

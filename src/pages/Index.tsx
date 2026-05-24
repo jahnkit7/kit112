@@ -1,9 +1,13 @@
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { motion, useSpring, useMotionValue } from "motion/react";
 import { Hero } from "@/gemini/components/Hero";
 import { Preloader } from "@/gemini/components/Preloader";
-import { CinematicFooter } from "@/gemini/components/ui/motion-footer";
 
+const CinematicFooter = lazy(() =>
+  import("@/gemini/components/ui/motion-footer").then((module) => ({
+    default: module.CinematicFooter,
+  })),
+);
 
 
 
@@ -35,6 +39,16 @@ const CustomCursor = () => {
 
 const Index = () => {
   const [isLoading, setIsLoading] = useState(true);
+  const [showCinematicFooter, setShowCinematicFooter] = useState(false);
+
+  useEffect(() => {
+    const query = window.matchMedia("(min-width: 1024px)");
+    const update = () => setShowCinematicFooter(query.matches);
+
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
 
   return (
     <div className="relative min-h-screen gemini-root bg-[#0a0a0a] text-zinc-100 [overflow-x:clip]">
@@ -47,7 +61,11 @@ const Index = () => {
           <main>
             <Hero />
           </main>
-          <CinematicFooter />
+          {showCinematicFooter && (
+            <Suspense fallback={null}>
+              <CinematicFooter />
+            </Suspense>
+          )}
 
 
         </>
