@@ -1386,8 +1386,15 @@ export const Hero = () => {
                 </div>
               </motion.div>
 
-              {/* Dock + immersive screens — rendered inside the single phone layer. */}
-              <div className="absolute inset-0 z-40 pointer-events-none">
+              {/* Dock + immersive screens — escape the phone stacking context on mobile so
+                  the bottom nav stays above the scrolling stream (z-45). */}
+              <div
+                className={
+                  isMobile
+                    ? "fixed inset-x-0 top-[4vh] z-[60] mx-auto h-[92vh] max-h-[900px] w-[92vw] max-w-[460px] pointer-events-none"
+                    : "absolute inset-0 z-40 pointer-events-none"
+                }
+              >
                 {dockOverlay}
               </div>
             </motion.div>
