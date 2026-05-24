@@ -1386,18 +1386,22 @@ export const Hero = () => {
                 </div>
               </motion.div>
 
-              {/* Dock + immersive screens — escape the phone stacking context on mobile so
-                  the bottom nav stays above the scrolling stream (z-45). */}
-              <div
-                className={
-                  isMobile
-                    ? "fixed inset-x-0 top-[4vh] z-[60] mx-auto h-[92vh] max-h-[900px] w-[92vw] max-w-[460px] pointer-events-none"
-                    : "absolute inset-0 z-40 pointer-events-none"
-                }
-              >
+              {/* Dock-only render kept inside the phone shell for desktop (relative positioning). */}
+              {!isMobile && (
+                <div className="absolute inset-0 z-40 pointer-events-none">
+                  {dockOverlay}
+                </div>
+              )}
+            </motion.div>
+
+            {/* Mobile dock — rendered OUTSIDE the phone shell so its z-[60] stays above
+                the scrolling stream frame (z-45). Otherwise the phone's z-30 stacking
+                context would trap the dock underneath the scrolling content. */}
+            {isMobile && (
+              <div className="fixed inset-x-0 top-[4vh] z-[60] mx-auto h-[92vh] max-h-[900px] w-[92vw] max-w-[460px] pointer-events-none">
                 {dockOverlay}
               </div>
-            </motion.div>
+            )}
           </div>
 
           {/* Mobile: spacer to preserve document scroll height */}
