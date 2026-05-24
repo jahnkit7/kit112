@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect, useState } from "react";
 import { motion, useSpring, useMotionValue } from "motion/react";
 import { Hero } from "@/gemini/components/Hero";
 import { Preloader } from "@/gemini/components/Preloader";
+import BackgroundMusic from "@/components/BackgroundMusic";
 
 const CinematicFooter = lazy(() =>
   import("@/gemini/components/ui/motion-footer").then((module) => ({
@@ -66,6 +67,7 @@ const Index = () => {
               <CinematicFooter />
             </Suspense>
           )}
+          <BackgroundMusic />
 
 
         </>

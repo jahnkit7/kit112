@@ -62,7 +62,7 @@ import {
   StaggerList,
   staggerItem,
 } from "./CinematicReveal";
-import { FocusRail, type FocusRailItem } from "@/components/ui/focus-rail";
+
 
 import { ContainerScroll, CardsContainer, CardTransformed } from "@/components/ui/animated-cards-stack";
 import mjkLogo from "@/assets/mjk-logo.svg";
@@ -79,21 +79,8 @@ const PLACEHOLDER_GRADIENTS = [
 ];
 
 const PARCOURS_EASE = [0.16, 1, 0.3, 1] as const;
+void PARCOURS_EASE;
 
-const PARCOURS_REVEAL: Variants = {
-  hidden: { opacity: 0, y: 56, filter: "blur(14px)" },
-  show: {
-    opacity: 1,
-    y: 0,
-    filter: "blur(0px)",
-    transition: { duration: 0.95, ease: PARCOURS_EASE },
-  },
-};
-
-const PARCOURS_CHILD_REVEAL: Variants = {
-  hidden: { opacity: 0, y: 24 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: PARCOURS_EASE } },
-};
 
 // Inline SVG placeholder kept for legacy modal grids (zero network cost).
 const PLACEHOLDER_IMG =
@@ -123,6 +110,51 @@ interface ParcoursItemProps {
   index: number;
 }
 
+// Single image card with auto horizontal slide between 4 images.
+const AutoSlideCard = ({ images, label }: { images: string[]; label: string }) => {
+  const [active, setActive] = useState(0);
+  useEffect(() => {
+    const id = setInterval(
+      () => setActive((v) => (v + 1) % images.length),
+      3800,
+    );
+    return () => clearInterval(id);
+  }, [images.length]);
+
+  return (
+    <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-white/10 bg-zinc-900 shadow-[0_18px_40px_rgba(0,0,0,0.45)]">
+      <AnimatePresence initial={false} mode="sync">
+        <motion.img
+          key={active}
+          src={images[active]}
+          alt={`${label} ${active + 1}`}
+          loading="lazy"
+          decoding="async"
+          initial={{ x: "100%", opacity: 0.4 }}
+          animate={{ x: 0, opacity: 1 }}
+          exit={{ x: "-100%", opacity: 0.4 }}
+          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+      </AnimatePresence>
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+      <div className="absolute bottom-2 left-3 right-3 flex items-end justify-between">
+        <span className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.18em] text-white/90 drop-shadow">
+          {label}
+        </span>
+        <div className="flex gap-1">
+          {images.map((_, i) => (
+            <span
+              key={i}
+              className={`h-1 w-3 rounded-full transition-all ${i === active ? "bg-white" : "bg-white/30"}`}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const ParcoursItem = ({
   title,
   subtitle,
@@ -131,98 +163,114 @@ const ParcoursItem = ({
   index,
 }: ParcoursItemProps) => {
   const [expanded, setExpanded] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
 
-  const railItems: FocusRailItem[] = Array.from({ length: 4 }, (_, i) => ({
-    id: `${index}-${i}`,
-    title: `${title.split("·").pop()?.trim() || "Projet"} ${String(i + 1).padStart(2, "0")}`,
-    description,
-    meta: year,
-    imageSrc: PARCOURS_IMAGE_POOL[(index * 4 + i) % PARCOURS_IMAGE_POOL.length],
-    gradient: PLACEHOLDER_GRADIENTS[(index + i) % PLACEHOLDER_GRADIENTS.length],
-  }));
+  // Scroll-driven scale: small when entering/leaving, full at center (mobile-first).
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"],
+  });
+  const scale = useTransform(scrollYProgress, [0, 0.4, 0.6, 1], [0.88, 1, 1, 0.88]);
+  const opacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0.35, 1, 1, 0.35]);
 
+  const images = Array.from(
+    { length: 4 },
+    (_, i) => PARCOURS_IMAGE_POOL[(index * 4 + i) % PARCOURS_IMAGE_POOL.length],
+  );
+
+  const label = title.split("·").pop()?.trim() || "Projet";
   const titleParts = title.split("·");
 
   return (
     <motion.div
-      variants={PARCOURS_REVEAL}
-      initial="hidden"
-      whileInView="show"
-      viewport={{ once: true, amount: 0.05, margin: "0px 0px -10% 0px" }}
-      transition={{ layout: { duration: 0.45, ease: [0.16, 1, 0.3, 1] } }}
+      ref={ref}
+      style={{ scale, opacity }}
+      transition={{ layout: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } }}
+      layout
       className="py-8 md:py-14 grid grid-cols-1 md:grid-cols-12 gap-5 md:gap-8 items-start"
     >
-      <motion.div variants={PARCOURS_CHILD_REVEAL} className="md:col-span-3 space-y-4 md:space-y-5">
+      <motion.div layout className="md:col-span-9 order-2 md:order-1 space-y-3 md:space-y-4">
         <span className="block text-lg md:text-2xl font-black font-sans tracking-tight text-white">
           {year}
         </span>
 
-        <FocusRail items={railItems} compact className="max-w-[16rem] md:max-w-none" />
-      </motion.div>
-
-      <motion.div variants={PARCOURS_CHILD_REVEAL} className="md:col-span-9 space-y-4 md:space-y-5">
-        <div className="space-y-3">
-          <div className="text-[9px] md:text-xs font-bold tracking-[0.3em] text-white/40 uppercase">
-            {subtitle}
-          </div>
-          <h3 className="text-base md:text-3xl font-black leading-[1.15] tracking-tight text-white">
-            {titleParts.map((part, i) => (
-              <span key={i} className={i === 1 ? "text-white/30 block md:inline" : ""}>
-                {i === 1 ? ` for ${part.trim()}` : part.trim()}
-              </span>
-            ))}
-          </h3>
-          <p className="text-[13px] md:text-base font-light max-w-2xl leading-relaxed text-white/50">
-            {description}
-          </p>
-
-          <button
-            type="button"
-            onClick={() => setExpanded((v) => !v)}
-            className="group inline-flex items-center gap-1.5 pt-1 text-[9px] md:text-[10px] font-black uppercase tracking-[0.18em] text-white/60 transition hover:text-white"
-          >
-            {expanded ? "Réduire" : "Plus d'infos"}
-            <motion.span animate={{ rotate: expanded ? 180 : 0 }} transition={{ duration: 0.25 }}>
-              <ChevronDown size={11} />
-            </motion.span>
-          </button>
-        </div>
-
-        <AnimatePresence initial={false}>
-          {expanded && (
+        <AnimatePresence mode="wait" initial={false}>
+          {!expanded ? (
             <motion.div
-              key="content"
-              initial={{ opacity: 0, height: 0, y: -8 }}
-              animate={{ opacity: 1, height: "auto", y: 0 }}
-              exit={{ opacity: 0, height: 0, y: -8 }}
-              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              className="overflow-hidden"
+              key="collapsed"
+              layout
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+              className="space-y-3"
             >
-              <div className="pt-2 md:pt-4 space-y-4 md:space-y-5">
-                <p className="text-sm md:text-base text-white/70 leading-relaxed max-w-2xl">
-                  {description} Plus de détails, captures et explorations
-                  visuelles à venir pour ce projet.
-                </p>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-3">
-                  {railItems.map((item, i) => (
-                    <div
-                      key={i}
-                      className="relative aspect-square overflow-hidden rounded-xl border border-white/5 bg-zinc-900"
-                    >
-                      <img
-                        src={item.imageSrc}
-                        alt={item.title}
-                        loading="lazy"
-                        decoding="async"
-                        className="h-full w-full object-cover"
-                      />
-                    </div>
-                  ))}
-                </div>
+              <div className="text-[9px] md:text-xs font-bold tracking-[0.3em] text-white/40 uppercase">
+                {subtitle}
+              </div>
+              <h3 className="text-base md:text-3xl font-black leading-[1.15] tracking-tight text-white">
+                {titleParts.map((part, i) => (
+                  <span key={i} className={i === 1 ? "text-white/30 block md:inline" : ""}>
+                    {i === 1 ? ` for ${part.trim()}` : part.trim()}
+                  </span>
+                ))}
+              </h3>
+              <p className="text-[13px] md:text-base font-light max-w-2xl leading-relaxed text-white/50">
+                {description}
+              </p>
+            </motion.div>
+          ) : (
+            <motion.div
+              key="expanded"
+              layout
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+              className="space-y-4 rounded-2xl border border-white/10 bg-white/5 p-4 md:p-6 backdrop-blur-sm"
+            >
+              <div className="text-[9px] md:text-xs font-bold tracking-[0.3em] text-primary uppercase">
+                {subtitle} — Détails
+              </div>
+              <h3 className="text-lg md:text-3xl font-black leading-[1.1] tracking-tight text-white">
+                {title}
+              </h3>
+              <p className="text-sm md:text-base font-light leading-relaxed text-white/80">
+                {description}
+              </p>
+              <p className="text-sm md:text-base font-light leading-relaxed text-white/60">
+                Plus de détails, captures et explorations visuelles à venir
+                pour ce projet. Cette expérience a marqué une étape clé du
+                parcours : structuration, mise en marché et exécution terrain.
+              </p>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                {images.map((src, i) => (
+                  <div
+                    key={i}
+                    className="relative aspect-square overflow-hidden rounded-xl border border-white/10 bg-zinc-900"
+                  >
+                    <img src={src} alt="" loading="lazy" decoding="async" className="h-full w-full object-cover" />
+                  </div>
+                ))}
               </div>
             </motion.div>
           )}
         </AnimatePresence>
+
+        <button
+          type="button"
+          onClick={() => setExpanded((v) => !v)}
+          className="group inline-flex items-center gap-1.5 pt-1 text-[10px] md:text-[11px] font-black uppercase tracking-[0.18em] text-white/70 transition hover:text-white"
+        >
+          {expanded ? "Réduire" : "Plus d'infos"}
+          <motion.span animate={{ rotate: expanded ? 180 : 0 }} transition={{ duration: 0.25 }}>
+            <ChevronDown size={12} />
+          </motion.span>
+        </button>
+      </motion.div>
+
+      <motion.div layout className="md:col-span-3 order-1 md:order-2">
+        <AutoSlideCard images={images} label={label} />
       </motion.div>
     </motion.div>
   );
