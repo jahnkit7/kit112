@@ -66,6 +66,7 @@ import {
 
 import { ContainerScroll, CardsContainer, CardTransformed } from "@/components/ui/animated-cards-stack";
 import mjkLogo from "@/assets/mjk-logo.svg";
+import EditorialStream from "./EditorialStream";
 
 // Lightweight gradient placeholders — zero network, GPU friendly.
 // We rotate through a small palette so each parcours feels distinct.
