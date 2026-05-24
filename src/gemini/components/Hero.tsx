@@ -62,7 +62,7 @@ import {
   StaggerList,
   staggerItem,
 } from "./CinematicReveal";
-import { FocusRail, type FocusRailItem } from "@/components/ui/focus-rail";
+
 
 import { ContainerScroll, CardsContainer, CardTransformed } from "@/components/ui/animated-cards-stack";
 import mjkLogo from "@/assets/mjk-logo.svg";
