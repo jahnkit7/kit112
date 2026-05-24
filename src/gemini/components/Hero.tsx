@@ -79,21 +79,8 @@ const PLACEHOLDER_GRADIENTS = [
 ];
 
 const PARCOURS_EASE = [0.16, 1, 0.3, 1] as const;
+void PARCOURS_EASE;
 
-const PARCOURS_REVEAL: Variants = {
-  hidden: { opacity: 0, y: 56, filter: "blur(14px)" },
-  show: {
-    opacity: 1,
-    y: 0,
-    filter: "blur(0px)",
-    transition: { duration: 0.95, ease: PARCOURS_EASE },
-  },
-};
-
-const PARCOURS_CHILD_REVEAL: Variants = {
-  hidden: { opacity: 0, y: 24 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: PARCOURS_EASE } },
-};
 
 // Inline SVG placeholder kept for legacy modal grids (zero network cost).
 const PLACEHOLDER_IMG =
