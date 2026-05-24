@@ -1185,8 +1185,11 @@ export const Hero = () => {
                 </AnimatePresence>
               </div>
 
-              {/* Refined Dark Gradient Overlay */}
-              <div className={`absolute inset-0 bg-gradient-to-t from-black via-black/45 to-transparent opacity-95 z-10 ${isMobile && !isScrolled ? "hidden" : "block"}`} />
+              {/* Refined Dark Gradient Overlay — uniform veil for legibility + bottom darkening */}
+              <div className={`absolute inset-0 z-10 ${isMobile && !isScrolled ? "hidden" : "block"}`}>
+                <div className="absolute inset-0 bg-black/45" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/55 to-black/15" />
+              </div>
 
               {/* Vertical Availability Indicator removed */}
 
