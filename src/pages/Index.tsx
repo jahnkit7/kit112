@@ -67,6 +67,7 @@ const Index = () => {
               <CinematicFooter />
             </Suspense>
           )}
+          <BackgroundMusic />
 
 
         </>
