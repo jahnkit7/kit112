@@ -99,6 +99,22 @@ const PARCOURS_CHILD_REVEAL: Variants = {
 const PLACEHOLDER_IMG =
   "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 3'><rect width='4' height='3' fill='%23222'/><text x='2' y='1.7' font-family='monospace' font-size='0.35' fill='%23666' text-anchor='middle'>placeholder</text></svg>";
 
+// Real images via Unsplash CDN (lightweight, on-demand resized, no bundle weight).
+const PARCOURS_IMAGE_POOL = [
+  "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=480&q=70&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=480&q=70&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1551434678-e076c223a692?w=480&q=70&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=480&q=70&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=480&q=70&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=480&q=70&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=480&q=70&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1497366216548-37526070297c?w=480&q=70&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=480&q=70&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=480&q=70&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1531973576160-7125cd663d86?w=480&q=70&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=480&q=70&auto=format&fit=crop",
+];
+
 interface ParcoursItemProps {
   title: string;
   subtitle: string;
@@ -116,12 +132,12 @@ const ParcoursItem = ({
 }: ParcoursItemProps) => {
   const [expanded, setExpanded] = useState(false);
 
-  const railItems: FocusRailItem[] = Array.from({ length: 5 }, (_, i) => ({
+  const railItems: FocusRailItem[] = Array.from({ length: 4 }, (_, i) => ({
     id: `${index}-${i}`,
     title: `${title.split("·").pop()?.trim() || "Projet"} ${String(i + 1).padStart(2, "0")}`,
     description,
     meta: year,
-    imageSrc: PLACEHOLDER_IMG,
+    imageSrc: PARCOURS_IMAGE_POOL[(index * 4 + i) % PARCOURS_IMAGE_POOL.length],
     gradient: PLACEHOLDER_GRADIENTS[(index + i) % PLACEHOLDER_GRADIENTS.length],
   }));
 
@@ -132,44 +148,44 @@ const ParcoursItem = ({
       variants={PARCOURS_REVEAL}
       initial="hidden"
       whileInView="show"
-      viewport={{ once: true, amount: 0.22 }}
+      viewport={{ once: true, amount: 0.05, margin: "0px 0px -10% 0px" }}
       transition={{ layout: { duration: 0.45, ease: [0.16, 1, 0.3, 1] } }}
       className="py-8 md:py-14 grid grid-cols-1 md:grid-cols-12 gap-5 md:gap-8 items-start"
     >
       <motion.div variants={PARCOURS_CHILD_REVEAL} className="md:col-span-3 space-y-4 md:space-y-5">
-        <span className="block text-xl md:text-2xl font-black font-sans tracking-tight text-white">
+        <span className="block text-lg md:text-2xl font-black font-sans tracking-tight text-white">
           {year}
         </span>
 
         <FocusRail items={railItems} compact className="max-w-[16rem] md:max-w-none" />
-
-        <button
-          type="button"
-          onClick={() => setExpanded((v) => !v)}
-          className="group inline-flex items-center gap-1.5 text-[9px] md:text-[10px] font-black uppercase tracking-[0.18em] text-white/60 transition hover:text-white"
-        >
-          {expanded ? "Réduire" : "Plus d'infos"}
-          <motion.span animate={{ rotate: expanded ? 180 : 0 }} transition={{ duration: 0.25 }}>
-            <ChevronDown size={11} />
-          </motion.span>
-        </button>
       </motion.div>
 
       <motion.div variants={PARCOURS_CHILD_REVEAL} className="md:col-span-9 space-y-4 md:space-y-5">
         <div className="space-y-3">
-          <div className="text-[10px] md:text-xs font-bold tracking-[0.3em] text-white/40 uppercase">
+          <div className="text-[9px] md:text-xs font-bold tracking-[0.3em] text-white/40 uppercase">
             {subtitle}
           </div>
-          <h3 className="text-xl md:text-3xl font-black leading-[1.15] tracking-tight text-white">
+          <h3 className="text-base md:text-3xl font-black leading-[1.15] tracking-tight text-white">
             {titleParts.map((part, i) => (
               <span key={i} className={i === 1 ? "text-white/30 block md:inline" : ""}>
                 {i === 1 ? ` for ${part.trim()}` : part.trim()}
               </span>
             ))}
           </h3>
-          <p className="text-sm md:text-base font-light max-w-2xl leading-relaxed text-white/50">
+          <p className="text-[13px] md:text-base font-light max-w-2xl leading-relaxed text-white/50">
             {description}
           </p>
+
+          <button
+            type="button"
+            onClick={() => setExpanded((v) => !v)}
+            className="group inline-flex items-center gap-1.5 pt-1 text-[9px] md:text-[10px] font-black uppercase tracking-[0.18em] text-white/60 transition hover:text-white"
+          >
+            {expanded ? "Réduire" : "Plus d'infos"}
+            <motion.span animate={{ rotate: expanded ? 180 : 0 }} transition={{ duration: 0.25 }}>
+              <ChevronDown size={11} />
+            </motion.span>
+          </button>
         </div>
 
         <AnimatePresence initial={false}>
@@ -191,10 +207,16 @@ const ParcoursItem = ({
                   {railItems.map((item, i) => (
                     <div
                       key={i}
-                      className="aspect-square rounded-xl border border-white/5 bg-zinc-900"
-                      style={{ background: item.gradient }}
-                      aria-label={item.title}
-                    />
+                      className="relative aspect-square overflow-hidden rounded-xl border border-white/5 bg-zinc-900"
+                    >
+                      <img
+                        src={item.imageSrc}
+                        alt={item.title}
+                        loading="lazy"
+                        decoding="async"
+                        className="h-full w-full object-cover"
+                      />
+                    </div>
                   ))}
                 </div>
               </div>
