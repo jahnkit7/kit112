@@ -1698,10 +1698,11 @@ export const Hero = () => {
                 <WordStagger
                   as="h2"
                   text="Parcours Achieved"
-                  className="text-3xl md:text-5xl font-black uppercase tracking-normal leading-none text-white"
+                  className="text-2xl md:text-5xl font-black uppercase tracking-normal leading-none text-white"
                   stagger={0.08}
                 />
               </div>
+
 
               <StaggerList className="relative divide-y divide-white/5" stagger={0.12}>
                 {combinedData.map((item, idx) => (
